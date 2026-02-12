@@ -12,7 +12,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'fallback_key_for_dev')
 
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -21,6 +21,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'movies.apps.MoviesConfig',
+    'rooms.apps.RoomsConfig',
+    'swipes.apps.SwipesConfig',
 ]
 
 MIDDLEWARE = [
@@ -35,10 +38,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'watchmatch.urls'
 
+TEMPLATES_DIR = BASE_DIR / 'templates'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATES_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -88,3 +93,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+STATIC_DIR = BASE_DIR / 'static_dev'
+
+STATICFILES_DIRS = [STATIC_DIR]
+
+STATIC_ROOT = BASE_DIR / 'static'
