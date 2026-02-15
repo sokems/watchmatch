@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+import sys
 
 from dotenv import load_dotenv
 
@@ -105,3 +106,11 @@ STATIC_DIR = BASE_DIR / 'static_dev'
 STATICFILES_DIRS = [STATIC_DIR]
 
 STATIC_ROOT = BASE_DIR / 'static'
+
+if 'pytest' in sys.modules or 'test' in sys.argv:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
+        }
+    }
