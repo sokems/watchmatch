@@ -33,4 +33,3 @@ def url_admin_index():
 def url_homepage_index():
     """Возвращает URL главной страницы"""
     return reverse('core:index')
-
