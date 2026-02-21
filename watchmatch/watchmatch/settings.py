@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'core.apps.CoreConfig',
     'movies.apps.MoviesConfig',
     'rooms.apps.RoomsConfig',
     'swipes.apps.SwipesConfig',
