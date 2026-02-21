@@ -30,3 +30,16 @@ def superuser_client(superuser):
 def url_admin_index():
     """Возвращает URL страницы админки."""
     return reverse('admin:index')
+
+@pytest.fixture
+def auth_user(django_user_model):
+    """Создает зарегистрированного пользователя."""
+    return django_user_model.objects.create(username='sokem')
+
+@pytest.fixture
+def auth_user_client(auth_user):
+    """Возвращает клиент Django с авторизованным пользователем."""
+    client = Client()
+    client.force_login(auth_user)
+
+    return client
