@@ -52,14 +52,16 @@
   </style>
 </head>
 <body>
+  <!-- Bootstrap JS Bundle с Popper -->
+  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 
-{% include "includes\navbar.html" %}
+  {% include "includes\navbar.html" %}
 
-<main>
-  {% block content %}{% endblock %}
-</main>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
 
-{% include "includes\footer.html" %}
+  {% include "includes\footer.html" %}
 
 </body>
 </html>
