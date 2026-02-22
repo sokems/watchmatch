@@ -7,7 +7,7 @@
       Собирайте друзей, создавайте комнаты и решайте вместе, что посмотреть!
       WatchMatch делает процесс выбора простым и веселым — больше никаких долгих поисков, только совместное удовольствие и отличное настроение!
     </p>
-    <a href="#" class="btn btn-primary btn-lg mt-3">Создать комнату</a>
-    <a href="#" class="btn btn-primary btn-lg mt-3">Подключиться к комнате</a>
+    <a href="{% url 'rooms:create_room' %}" class="btn btn-primary btn-lg mt-3">Создать комнату</a>
+    <a href="{% url 'rooms:join_room' %}" class="btn btn-primary btn-lg mt-3">Подключиться к комнате</a>
 </div>
 {% endblock %}
