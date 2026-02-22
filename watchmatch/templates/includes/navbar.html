@@ -1,5 +1,35 @@
+{% load static %}
+
+{% with request.resolver_match.view_name as view_name %}
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
-    <a class="navbar-brand mx-auto" href="{% url 'core:index' %}">WatchMatch</a>
+    <!-- Логотип слева -->
+    <a class="navbar-brand" href="{% url 'core:index' %}">
+      <img src="{% static 'img/logo.png' %}" alt="WatchMatch" height="40">
+    </a>
+
+    <!-- Кнопка для мобильного меню -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Меню справа -->
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link {% if view_name  == 'core:index' %}active{% endif %}" href="{% url 'core:index' %}">Главная</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if view_name  == 'rooms:create_room' %}active{% endif %}" href="{% url 'rooms:create_room' %}">Создать комнатy</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if view_name  == 'rooms:join_room' %}active{% endif %}" href="{% url 'rooms:join_room' %}">Подключиться</a>
+        </li>
+      </ul>
+    </div>
   </div>
 </nav>
+
+{% endwith %}
