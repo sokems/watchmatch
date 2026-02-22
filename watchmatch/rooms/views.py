@@ -9,8 +9,9 @@ def create_room(request):
 
 def play_room(request, room_id):
     """Комната для игры"""
+    context = {'room_id': room_id}
     template_name = 'rooms/play_room.html'
-    return render(request, template_name)
+    return render(request, template_name, context)
 
 
 def join_room(request):
