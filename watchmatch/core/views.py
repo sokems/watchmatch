@@ -9,5 +9,6 @@ def index(request):
 
 
 def about(request):
-    """Станица о проекте"""
-    return HttpResponse('О проекте')
+    """Страница о проекте"""
+    template_name = 'core/about.html'
+    return render(request, template_name)
