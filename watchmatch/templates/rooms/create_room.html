@@ -1,11 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-  <h1 class="mb-4">Создание комнаты:</h1>
-  <p class="lead">
-    Форма для создания
-  </p>
-  <a href="#" class="btn btn-primary btn-lg mt-3">Создать комнату</a>
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh; padding: 50px 0;">
+  <div class="card p-4 shadow" style="width: 400px;">
+    <h3 class="card-title mb-4 text-center">Создание комнаты</h3>
+    <form method="post">
+      {% csrf_token %}
+
+      {% for field in form %}
+        <div class="mb-3 text-start">
+          {{ field.label_tag }}
+          {% if field.help_text %}
+            <small class="text-muted d-block mb-1">{{ field.help_text }}</small>
+          {% endif %}
+
+          {{ field }}
+
+          {% if field.errors %}
+            <div class="text-danger small">{{ field.errors }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <button type="submit" class="btn btn-primary w-100">Создать</button>
+    </form>
+  </div>
 </div>
 {% endblock %}
