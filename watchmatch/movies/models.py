@@ -28,7 +28,6 @@ class Genre(models.Model):
         return self.name
 
 
-
 class Movie(models.Model):
     """
     Фильм, доступный для голосования.

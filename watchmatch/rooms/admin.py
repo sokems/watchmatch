@@ -15,7 +15,6 @@ class RoomAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     filter_horizontal = ('genres',)
 
-
     def get_genres(self, obj):
         return ", ".join([g.name for g in obj.genres.all()])
 
