@@ -9,7 +9,24 @@ class Genre(models.Model):
     при создании комнаты.
     """
 
-    name = models.CharField(max_length=50)
+    id = models.IntegerField(
+        primary_key=True,
+        verbose_name='TMDB ID',
+        help_text='Идентификатор с TMDB API (заполняется автоматически)'
+    )
+    name = models.CharField(
+        max_length=50,
+        verbose_name='Название',
+        help_text='Название жанра'
+    )
+
+    class Meta:
+        verbose_name = 'жанр'
+        verbose_name_plural = 'Жанры'
+
+    def __str__(self):
+        return self.name
+
 
 
 class Movie(models.Model):
@@ -27,15 +44,56 @@ class Movie(models.Model):
     Используется в механике swipe для совместного выбора фильма.
     """
 
-    title = models.CharField(max_length=100)
-    original_title = models.CharField(max_length=100)
+    id = models.IntegerField(
+        primary_key=True,
+        verbose_name='TMDB ID',
+        help_text='Идентификатор с TMDB API (заполняется автоматически)'
+    )
+    title = models.CharField(
+        max_length=100,
+        verbose_name='Название',
+        help_text='Название на русском языке'
+    )
+    original_title = models.CharField(
+        max_length=100,
+        verbose_name='Оригинальное название',
+        help_text='Название на языке оригинала'
+    )
     genres = models.ManyToManyField(
         Genre,
         related_name='movies',
+        verbose_name='Жанр',
     )
-    release_date = models.DateField()
-    adult = models.BooleanField()
-    vote_average = models.DecimalField(max_digits=4, decimal_places=2)
-    overview = models.TextField()
-    poster_path = models.URLField()
-    backdrop_path = models.URLField()
+    release_date = models.DateField(
+        verbose_name='Дата релиза',
+        help_text='Дата релиза в мире'
+    )
+    adult = models.BooleanField(
+        verbose_name='18+',
+        help_text='Контент с рейтингом 18+'
+    )
+    vote_average = models.DecimalField(
+        max_digits=4,
+        decimal_places=2,
+        verbose_name='Средний рейтинг',
+        help_text='Средний рейтинг по TMDB'
+    )
+    overview = models.TextField(
+        verbose_name='Описание',
+        help_text='Описание на русском языке'
+    )
+    poster_path = models.URLField(
+        verbose_name='URL постера',
+        help_text='Открытый источник к постеру'
+    )
+    backdrop_path = models.URLField(
+        verbose_name='URL фона',
+        help_text='Открытый источник к фону по фильму'
+    )
+
+    class Meta:
+        verbose_name = 'фильм'
+        verbose_name_plural = 'Фильмы'
+
+    def __str__(self):
+        return f'{self.title} ({self.release_date})'
