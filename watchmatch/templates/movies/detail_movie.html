@@ -13,7 +13,8 @@
     <b>Дата релиза:</b> {{ movie.release_date }}<br>
     <b>18+:</b> {% if movie.adult %}Да{% else %}Нет{% endif %}<br>
     <b>Рейтинг:</b> {{ movie.vote_average }}<br>
-    <b>Описание:</b> {{ movie.overview }}<br><br>
+    {% if movie.overview %}<b>Описание:</b> {{ movie.overview }}<br>{% endif %}
+    <br>
   </p>
 </div>
 {% endblock %}

@@ -51,43 +51,52 @@ class Movie(models.Model):
     title = models.CharField(
         max_length=100,
         verbose_name='Название',
-        help_text='Название на русском языке'
+        help_text='Название на русском языке',
+        null=True
     )
     original_title = models.CharField(
         max_length=100,
         verbose_name='Оригинальное название',
-        help_text='Название на языке оригинала'
+        help_text='Название на языке оригинала',
+        null=True
     )
     genres = models.ManyToManyField(
         Genre,
         related_name='movies',
         verbose_name='Жанр',
+        null=True
     )
     release_date = models.DateField(
         verbose_name='Дата релиза',
-        help_text='Дата релиза в мире'
+        help_text='Дата релиза в мире',
+        null=True
     )
     adult = models.BooleanField(
         verbose_name='18+',
-        help_text='Контент с рейтингом 18+'
+        help_text='Контент с рейтингом 18+',
+        null=True
     )
     vote_average = models.DecimalField(
         max_digits=4,
         decimal_places=2,
         verbose_name='Средний рейтинг',
-        help_text='Средний рейтинг по TMDB'
+        help_text='Средний рейтинг по TMDB',
+        null=True
     )
     overview = models.TextField(
         verbose_name='Описание',
-        help_text='Описание на русском языке'
+        help_text='Описание на русском языке',
+        null=True
     )
     poster_path = models.URLField(
         verbose_name='URL постера',
-        help_text='Открытый источник к постеру'
+        help_text='Открытый источник к постеру',
+        null=True
     )
     backdrop_path = models.URLField(
         verbose_name='URL фона',
-        help_text='Открытый источник к фону по фильму'
+        help_text='Открытый источник к фону по фильму',
+        null=True
     )
 
     class Meta:
