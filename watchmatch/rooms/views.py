@@ -38,16 +38,20 @@ def play_room(request, room_id):
 def join_room(request):
     """Страница подключения к комнате"""
     template_name = 'rooms/join_room.html'
+    form = JoinRoomForm(request.POST or None)
 
-    if request.method == 'POST':
-        form = JoinRoomForm(request.POST)
+    if form.is_valid():
+        room_id = form.cleaned_data['room_id']
 
-        if form.is_valid():
-            room_id = form.cleaned_data['room_id']
+        room = Room.objects.get(id=room_id)
 
-            return redirect('rooms:play_room', room_id=room_id)
-    else:
-        form = JoinRoomForm()
-        context = {'form': form}
+        Participant.objects.create(
+            name=form.cleaned_data['name'],
+            room_id=room
+        )
+
+        return redirect('rooms:play_room', room_id=room_id)
+
+    context = {'form': form}
 
     return render(request, template_name, context)
