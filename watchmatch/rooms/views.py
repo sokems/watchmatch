@@ -27,9 +27,10 @@ def create_room(request):
 def play_room(request, room_id):
     """Комната для игры"""
     room = get_object_or_404(Room, pk=room_id)
-    count_participants = Participant.objects.filter(room_id=room).count()
+    participants = Participant.objects.filter(room_id=room)
+    count_participants = participants.count()
 
-    context = {'room': room, 'count_participants': count_participants}
+    context = {'room': room, 'count_participants': count_participants, 'participants': participants}
     template_name = 'rooms/play_room.html'
     return render(request, template_name, context)
 
