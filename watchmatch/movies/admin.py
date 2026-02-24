@@ -6,6 +6,7 @@ from .models import Genre, Movie
 class GenreAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
     search_fields = ('id', 'name')
+    list_display_links = ('name',)
 
 
 class MovieAdmin(admin.ModelAdmin):
@@ -26,6 +27,7 @@ class MovieAdmin(admin.ModelAdmin):
     )
     list_filter = ('genres', 'release_date', 'vote_average')
     filter_horizontal = ('genres',)
+    list_display_links = ('title',)
 
     def get_genres(self, obj):
         return ", ".join([g.name for g in obj.genres.all()])

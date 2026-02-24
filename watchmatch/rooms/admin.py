@@ -5,6 +5,7 @@ from .models import Room
 
 class RoomAdmin(admin.ModelAdmin):
     list_display = (
+        'id',
         'name',
         'count_participants',
         'get_genres',
@@ -14,9 +15,12 @@ class RoomAdmin(admin.ModelAdmin):
     )
     search_fields = ('name',)
     filter_horizontal = ('genres',)
+    list_display_links = ('name',)
 
     def get_genres(self, obj):
         return ", ".join([g.name for g in obj.genres.all()])
+
+    get_genres.short_description = "Жанры"
 
     def get_between_years(self, obj):
         if obj.year_start == obj.year_end:
@@ -25,6 +29,8 @@ class RoomAdmin(admin.ModelAdmin):
             return f"{obj.year_end} - {obj.year_start}"
         else:
             return f"{obj.year_start} - {obj.year_end}"
+
+    get_between_years.short_description = "Годы релиза"
 
 
 admin.site.register(Room, RoomAdmin)
