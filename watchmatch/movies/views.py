@@ -9,7 +9,10 @@ def detail_movie(request, movie_id):
     """Страница фильма"""
 
     tmdb_api_key = settings.TMDB_API_KEY
-    tmdb_url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={tmdb_api_key}&language=ru-RU"
+    tmdb_url = (
+        f"https://api.themoviedb.org/3/movie/"
+        f"{movie_id}?api_key={tmdb_api_key}&language=ru-RU"
+    )
     response = requests.get(tmdb_url)
 
     if response.status_code == 200:
@@ -25,8 +28,10 @@ def detail_movie(request, movie_id):
                 'vote_average': data['vote_average'],
                 'overview': data['overview'],
                 'release_date': data.get('release_date'),
-                'poster_path': f"https://image.tmdb.org/t/p/original{data.get('poster_path')}",
-                'backdrop_path': f"https://image.tmdb.org/t/p/original{data.get('backdrop_path')}",
+                'poster_path':
+                    f"https://image.tmdb.org/t/p/original{data.get('poster_path')}",
+                'backdrop_path':
+                    f"https://image.tmdb.org/t/p/original{data.get('backdrop_path')}",
             }
         )
 

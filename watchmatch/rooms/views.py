@@ -30,7 +30,11 @@ def play_room(request, room_id):
     participants = Participant.objects.filter(room_id=room)
     count_participants = participants.count()
 
-    context = {'room': room, 'count_participants': count_participants, 'participants': participants}
+    context = {
+        'room': room,
+        'count_participants': count_participants,
+        'participants': participants
+    }
     template_name = 'rooms/play_room.html'
     return render(request, template_name, context)
 
@@ -42,7 +46,6 @@ def join_room(request):
 
     if form.is_valid():
         room_id = form.cleaned_data['room_id']
-
         room = Room.objects.get(id=room_id)
 
         Participant.objects.create(

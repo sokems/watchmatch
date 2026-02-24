@@ -1,5 +1,3 @@
-from ctypes.wintypes import PWORD
-
 from django.contrib import admin
 
 from .models import Room, Participant
