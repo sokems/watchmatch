@@ -1,6 +1,8 @@
+from ctypes.wintypes import PWORD
+
 from django.contrib import admin
 
-from .models import Room
+from .models import Room, Participant
 
 
 class RoomAdmin(admin.ModelAdmin):
@@ -33,4 +35,16 @@ class RoomAdmin(admin.ModelAdmin):
     get_between_years.short_description = "Годы релиза"
 
 
+class ParticipantAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'name',
+        'room_id',
+    )
+    list_filter = ('room_id',)
+    list_display_links = ('name',)
+    readonly_fields = ('room_id',)
+
+
 admin.site.register(Room, RoomAdmin)
+admin.site.register(Participant, ParticipantAdmin)

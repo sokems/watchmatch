@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import RoomForm, JoinRoomForm
+from .models import Room, Participant
 
 
 def create_room(request):
@@ -10,6 +11,12 @@ def create_room(request):
 
     if form.is_valid():
         room = form.save()
+
+        Participant.objects.create(
+            name=form.cleaned_data['creator_name'],
+            room_id=room
+        )
+
         return redirect('rooms:play_room', room_id=room.id)
 
     context = {'form': form}
@@ -19,7 +26,10 @@ def create_room(request):
 
 def play_room(request, room_id):
     """Комната для игры"""
-    context = {'room_id': room_id}
+    room = get_object_or_404(Room, pk=room_id)
+    count_participants = Participant.objects.filter(room_id=room).count()
+
+    context = {'room': room, 'count_participants': count_participants}
     template_name = 'rooms/play_room.html'
     return render(request, template_name, context)
 

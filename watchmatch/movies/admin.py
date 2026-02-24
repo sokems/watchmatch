@@ -7,6 +7,7 @@ class GenreAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
     search_fields = ('id', 'name')
     list_display_links = ('name',)
+    readonly_fields = ('id',)
 
 
 class MovieAdmin(admin.ModelAdmin):
@@ -28,6 +29,7 @@ class MovieAdmin(admin.ModelAdmin):
     list_filter = ('genres', 'release_date', 'vote_average')
     filter_horizontal = ('genres',)
     list_display_links = ('title',)
+    readonly_fields = ('id',)
 
     def get_genres(self, obj):
         return ", ".join([g.name for g in obj.genres.all()])

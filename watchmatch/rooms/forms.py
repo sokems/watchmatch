@@ -5,6 +5,11 @@ from .models import Room
 
 
 class RoomForm(forms.ModelForm):
+    creator_name = forms.CharField(
+        max_length=50,
+        label='Ваше имя',
+        help_text='максимальное количество символов 50'
+    )
     count_participants = forms.TypedChoiceField(
         choices=[(i, i) for i in range(1, 5)],
         coerce=int,
@@ -35,6 +40,7 @@ class RoomForm(forms.ModelForm):
             'year_end',
             'adult',
             'vote_average',
+            'creator_name',
         ]
 
     def __init__(self, *args, **kwargs):

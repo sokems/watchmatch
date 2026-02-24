@@ -64,7 +64,7 @@ class Movie(models.Model):
         Genre,
         related_name='movies',
         verbose_name='Жанр',
-        null=True
+        blank=True
     )
     release_date = models.DateField(
         verbose_name='Дата релиза',

@@ -64,4 +64,23 @@ class Participant(models.Model):
     за фильмы внутри комнаты.
     """
 
-    name = models.CharField(max_length=50)
+    name = models.CharField(
+        max_length=50,
+        verbose_name='Имя',
+        help_text='максимальное количество символов 50'
+    )
+    room_id = models.ForeignKey(
+        Room,
+        on_delete=models.CASCADE,
+        related_name='participants',
+        null=True,
+        blank=True,
+        verbose_name='ID комнаты',
+    )
+
+    class Meta:
+        verbose_name = 'участник'
+        verbose_name_plural = 'Участники'
+
+    def __str__(self):
+        return f'{self.pk} - {self.name}'

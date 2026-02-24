@@ -1,10 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-  <h1 class="mb-4">Комната {{ room_id }}</h1>
-  <p class="lead">
-    Игра
-  </p>
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh; padding: 50px 0;">
+  <div class="card p-4 shadow text-start" style="width: 400px;">
+    <h3 class="card-title mb-4 text-center">Комната «{{ room.name }}»</h3>
+    <p class="room_info"><b>Количество участников:</b> {{ count_participants }} из {{ room.count_participants }}</p>
+    <p class="room_info"><b>Жанры:</b> {% for genre in room.genres.all %}{{ genre.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+    <p class="room_info"><b>Годы релиза:</b> {% if room.year_start < room.year_end %}
+      {{ room.year_start }} - {{ room.year_end }}
+      {% elif room.year_start > room.year_end %}
+      {{ room.year_end }} - {{ room.year_start }}
+      {% else %}
+      {{ room.year_start }}
+      {% endif %}</p>
+    <p class="room_info"><b>18+:</b> {% if room.adult %}Да{% else %}Нет{% endif %}</p>
+    <p class="room_info"><b>Рейтинг:</b> от {{ room.vote_average }}</p>
+  </div>
 </div>
 {% endblock %}
