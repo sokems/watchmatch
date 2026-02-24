@@ -7,9 +7,13 @@ def create_room(request):
     """Создание новой комнаты для игры"""
     template_name = 'rooms/create_room.html'
     form = RoomForm(request.POST or None)
-    # if form.is_valid():
-    #     form.save()
+
+    if form.is_valid():
+        room = form.save()
+        return redirect('rooms:play_room', room_id=room.id)
+
     context = {'form': form}
+
     return render(request, template_name, context)
 
 
