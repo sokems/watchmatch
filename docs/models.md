@@ -4,7 +4,7 @@
 
 |   Название поля    |                     Тип                      |       Описание        |
 |:------------------:|:--------------------------------------------:|:---------------------:|
-|         id         |                IntegerField()                |     Идентификатор     |
+|         id         |                     auto                     |     Идентификатор     |
 |        name        |          CharField(max_length=100)           |   Название комнаты    |
 | count_participants |         PositiveSmallIntegerField()          | Количество участников |
 |       genres       | ManyToManyField(Genre, related_name='rooms') |    Выбранные жанры    |
@@ -24,26 +24,27 @@
 
 3. **Participant**
 
-|   Название поля    |           Тип            |   Описание    |
-|:------------------:|:------------------------:|:-------------:|
-|         id         |      IntegerField()      | Идентификатор |
-|        name        | CharField(max_length=50) | Имя участника |
+| Название поля |                                              Тип                                               |                     Описание                      |
+|:-------------:|:----------------------------------------------------------------------------------------------:|:-------------------------------------------------:|
+|      id       |                                              auto                                              |                   Идентификатор                   |
+|     name      |                                    CharField(max_length=50)                                    |                   Имя участника                   |
+|    room_id    | ForeignKey(Room, on_delete=models.CASCADE, related_name='participants', null=True, blank=True) | Идентификатор комнаты к которой подключился игрок |
 
 
 4. **Movie**
 
-| Название поля  |                      Тип                      |          Описание          |
-|:--------------:|:---------------------------------------------:|:--------------------------:|
-|       id       |        IntegerField(primary_key=True)         |  Идентификатор (TMDB API)  |
-|     title      |           CharField(max_length=100)           | Название фильма на русском |
-| original_title |           CharField(max_length=100)           |   Оригинальное название    |
-|     genres     | ManyToManyField(Genre, related_name='movies') |           Жанры            |
-|  release_date  |                  DateField()                  |        Дата релиза         |
-|     adult      |                BooleanField()                 |         Якорь 18+          |
-|  vote_average  | DecimalField(max_digits=4, decimal_places=2)  |          Рейтинг           |
-|    overview    |                  TextField()                  |          Описание          |
-|  poster_path   |                  URLField()                   |        Путь постера        |
-| backdrop_path  |                  URLField()                   |         Путь фона          |
+| Название поля  |                            Тип                            |          Описание          |
+|:--------------:|:---------------------------------------------------------:|:--------------------------:|
+|       id       |              IntegerField(primary_key=True)               |  Идентификатор (TMDB API)  |
+|     title      |           CharField(max_length=100, null=True)            | Название фильма на русском |
+| original_title |           CharField(max_length=100, null=True)            |   Оригинальное название    |
+|     genres     | ManyToManyField(Genre, related_name='movies', blank=True) |           Жанры            |
+|  release_date  |                   DateField(null=True)                    |        Дата релиза         |
+|     adult      |                  BooleanField(null=True)                  |         Якорь 18+          |
+|  vote_average  |  DecimalField(max_digits=4, decimal_places=2, null=True)  |          Рейтинг           |
+|    overview    |                   TextField(null=True)                    |          Описание          |
+|  poster_path   |                    URLField(null=True)                    |        Путь постера        |
+| backdrop_path  |                    URLField(null=True)                    |         Путь фона          |
 
 5. **Swipe**
 
