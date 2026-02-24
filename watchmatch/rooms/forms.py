@@ -5,33 +5,16 @@ from .models import Room
 
 
 class RoomForm(forms.ModelForm):
-    name = forms.CharField(
-        max_length=100,
-        label='Название комнаты',
-        help_text='не должно превышать 100 символов'
-    )
-    count_participants = forms.IntegerField(
-        min_value=1,
-        max_value=4,
+    count_participants = forms.TypedChoiceField(
+        choices=[(i, i) for i in range(1, 5)],
+        coerce=int,
         label='Количество участников',
         help_text='от 1 до 4 участников'
     )
     genres = forms.ModelMultipleChoiceField(
-        queryset=Genre.objects.all(),
+        queryset=Genre.objects.none(),
         widget=forms.CheckboxSelectMultiple,
         label='Жанр',
-    )
-    year_start = forms.IntegerField(
-        label='Релиз от',
-        help_text='Укажите начальный год релиза. Если нужен только один год, '
-                  'укажите одинаковые значения в полях "Релиз от" и "Релиз до"'
-    )
-    year_end = forms.IntegerField(
-        label='Релиз до',
-    )
-    adult = forms.BooleanField(
-        required=False,
-        label='18+'
     )
     vote_average = forms.DecimalField(
         max_digits=4,
@@ -53,3 +36,19 @@ class RoomForm(forms.ModelForm):
             'adult',
             'vote_average',
         ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['genres'].queryset = Genre.objects.all()
+
+
+class JoinRoomForm(forms.Form):
+    name = forms.CharField(
+        max_length=50,
+        label='Имя',
+        help_text='введите свое имя'
+    )
+    room_id = forms.IntegerField(
+        label='ID комнаты',
+        help_text='ID вам сообщит его создатель'
+    )

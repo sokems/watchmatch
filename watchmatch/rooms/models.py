@@ -18,10 +18,11 @@ class Room(models.Model):
     name = models.CharField(
         max_length=100,
         verbose_name='Название',
-        help_text='Название комнаты'
+        help_text='не должно превышать 100 символов'
     )
     count_participants = models.PositiveSmallIntegerField(
-        verbose_name='Количество участников'
+        verbose_name='Количество участников',
+        help_text='от 1 до 4 участников'
     )
     genres = models.ManyToManyField(
         'movies.Genre',
@@ -39,7 +40,6 @@ class Room(models.Model):
     )
     adult = models.BooleanField(
         verbose_name='18+',
-        help_text='Контент с рейтингом 18+'
     )
     vote_average = models.DecimalField(
         max_digits=4,

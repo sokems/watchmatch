@@ -1,11 +1,18 @@
 {% extends "base.html" %}
 
+{% load django_bootstrap5 %}
+
 {% block content %}
-<div class="container">
-  <h1 class="mb-4">Введите ID комнаты:</h1>
-  <p class="lead">
-    Форма
-  </p>
-  <a href="#" class="btn btn-primary btn-lg mt-3">Подключиться</a>
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh; padding: 50px 0;">
+  <div class="card p-4 shadow text-start" style="width: 400px;">
+    <h3 class="card-title mb-4 text-center">Подключение</h3>
+
+    <form method="post">
+      {% bootstrap_form form %}
+
+      {% csrf_token %}
+      {% bootstrap_button button_type="submit" content="Подключиться" %}
+    </form>
+  </div>
 </div>
 {% endblock %}
