@@ -47,6 +47,14 @@ class RoomForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['genres'].queryset = Genre.objects.all()
 
+    def clean_creator_name(self):
+        creator_name = self.cleaned_data['creator_name']
+        return ''.join(creator_name.split())
+
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        return ''.join(name.split())
+
 
 class JoinRoomForm(forms.Form):
     name = forms.CharField(
@@ -58,3 +66,7 @@ class JoinRoomForm(forms.Form):
         label='ID комнаты',
         help_text='ID вам сообщит его создатель'
     )
+
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        return ''.join(name.split())

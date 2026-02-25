@@ -1,5 +1,7 @@
 from django.db import models
 
+from rooms.validators import validate_vote_average
+
 
 class Genre(models.Model):
     """
@@ -81,7 +83,8 @@ class Movie(models.Model):
         decimal_places=2,
         verbose_name='Средний рейтинг',
         help_text='Средний рейтинг по TMDB',
-        null=True
+        null=True,
+        validators=(validate_vote_average,)
     )
     overview = models.TextField(
         verbose_name='Описание',

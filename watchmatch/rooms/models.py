@@ -1,5 +1,11 @@
 from django.db import models
 
+from .validators import (
+    validate_participants_count,
+    validate_vote_average,
+    validate_year
+)
+
 
 class Room(models.Model):
     """
@@ -22,7 +28,8 @@ class Room(models.Model):
     )
     count_participants = models.PositiveSmallIntegerField(
         verbose_name='Количество участников',
-        help_text='от 1 до 4 участников'
+        help_text='от 1 до 4 участников',
+        validators=(validate_participants_count,)
     )
     genres = models.ManyToManyField(
         'movies.Genre',
@@ -32,11 +39,13 @@ class Room(models.Model):
     year_start = models.PositiveSmallIntegerField(
         verbose_name='Релиз от',
         help_text='Укажите начальный год релиза. Если нужен только один год, '
-                  'укажите одинаковые значения в полях "Релиз от" и "Релиз до"'
+                  'укажите одинаковые значения в полях "Релиз от" и "Релиз до"',
+        validators=(validate_year,)
     )
     year_end = models.PositiveSmallIntegerField(
         verbose_name='Релиз до',
-        help_text='Укажите конечный год релиза'
+        help_text='Укажите конечный год релиза',
+        validators=(validate_year,)
     )
     adult = models.BooleanField(
         verbose_name='18+',
@@ -45,7 +54,8 @@ class Room(models.Model):
         max_digits=4,
         decimal_places=2,
         verbose_name='Средний рейтинг',
-        help_text='Средний рейтинг по TMDB'
+        help_text='Средний рейтинг по TMDB',
+        validators=(validate_vote_average,)
     )
 
     class Meta:
