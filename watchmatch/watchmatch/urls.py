@@ -8,6 +8,7 @@ urlpatterns = [
     path('', include('core.urls')),
     path('movies/', include('movies.urls')),
     path('rooms/', include('rooms.urls')),
+    path('play_room/', include('swipes.urls'))
 ]
 
 if settings.DEBUG:

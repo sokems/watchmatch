@@ -1,100 +1,43 @@
-import random
-
 from django.shortcuts import render
-from django.conf import settings
-import requests
 
-from .models import Movie, Genre
+from .models import Genre
+from .services import get_movie_tmdb, create_and_return_movie
 
 
 def detail_movie(request, movie_id):
     """Страница фильма"""
 
-    tmdb_api_key = settings.TMDB_API_KEY
-    tmdb_url = (
-        f"https://api.themoviedb.org/3/movie/"
-        f"{movie_id}?api_key={tmdb_api_key}&language=ru-RU"
-    )
-    response = requests.get(tmdb_url)
+    data = get_movie_tmdb(movie_id)
 
-    if response.status_code == 200:
-        data = response.json()
-        release_date = data.get('release_date') or None
+    if not data or 'id' not in data:
+        return render(request, "movies/movie_not_found.html", status=404)
 
-        movie, created = Movie.objects.get_or_create(
-            id=data['id'],
-            defaults={
-                'id': data['id'],
-                'title': data['title'],
-                'original_title': data['original_title'],
-                'adult': data['adult'],
-                'vote_average': data['vote_average'],
-                'overview': data['overview'],
-                'release_date': release_date,
-                'poster_path':
-                    f"https://image.tmdb.org/t/p/original{data.get('poster_path')}",
-                'backdrop_path':
-                    f"https://image.tmdb.org/t/p/original{data.get('backdrop_path')}",
-            }
-        )
+    movie = create_and_return_movie(data)
 
-        genre_ids = []
-        for g in data.get('genres', []):
-            genre_obj, created = Genre.objects.get_or_create(
-                id=g['id'], defaults={'name': g['name']}
-            )
-            genre_ids.append(genre_obj.id)
+    genre_ids = []
+    for g in data.get('genres', []):
+        genre_obj = Genre.objects.get_or_create(
+            id=g['id'], defaults={'name': g['name']}
+        )[0]
+        genre_ids.append(genre_obj.id)
 
-        movie.genres.set(Genre.objects.filter(id__in=genre_ids))
-        movie.save()
-    else:
-        return render(request, 'movies/movie_not_found.html', status=404)
+    movie.genres.set(Genre.objects.filter(id__in=genre_ids))
+    movie.save()
 
-    context = {'movie': movie}
-    template_name = 'movies/detail_movie.html'
-    return render(request, template_name, context)
+    return render(request, 'movies/detail_movie.html', {'movie': movie})
 
 
 def list_movies(request):
-    page = random.randint(1, 500)
+    """Страница случайного фильма"""
+    data = get_movie_tmdb()
 
-    url = (f"https://api.themoviedb.org/3/discover/movie?"
-           f"api_key={settings.TMDB_API_KEY}&"
-           f"page={page}&"
-           f"language=ru-RU")
-
-    response = requests.get(url)
-    data = response.json()
-    movies = data.get("results", [])
-
-    if not movies:
-        return render(request, "movies/movie_not_found.html", status=404)
-
-    random_movie = random.choice(movies)
-    release_date = random_movie.get('release_date') or None
-
-    movie, created = Movie.objects.get_or_create(
-        id=random_movie['id'],
-        defaults={
-            'id': random_movie['id'],
-            'title': random_movie['title'],
-            'original_title': random_movie['original_title'],
-            'adult': random_movie['adult'],
-            'vote_average': random_movie['vote_average'],
-            'overview': random_movie['overview'],
-            'release_date': release_date,
-            'poster_path':
-                f"https://image.tmdb.org/t/p/original{random_movie.get('poster_path')}",
-            'backdrop_path':
-                f"https://image.tmdb.org/t/p/original{random_movie.get('backdrop_path')}",
-        }
-    )
+    movie = create_and_return_movie(data)
 
     genre_ids = []
-    for g in random_movie.get('genre_ids', []):
+    for g in data.get('genre_ids', []):
         genre_ids.append(g)
 
     movie.genres.set(Genre.objects.filter(id__in=genre_ids))
     movie.save()
 
-    return render(request, "movies/list_movies.html", {"movie": movie})
+    return render(request, 'movies/list_movies.html', {"movie": movie})
