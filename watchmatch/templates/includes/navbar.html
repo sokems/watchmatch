@@ -22,6 +22,9 @@
           <a class="nav-link {% if view_name  == 'core:index' %}active{% endif %}" href="{% url 'core:index' %}">Главная</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link {% if view_name  == 'movies:list_movies' %}active{% endif %}" href="{% url 'movies:list_movies' %}">Рандомный фильм</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link {% if view_name  == 'rooms:create_room' %}active{% endif %}" href="{% url 'rooms:create_room' %}">Создать комнатy</a>
         </li>
         <li class="nav-item">

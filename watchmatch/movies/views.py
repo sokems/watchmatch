@@ -1,3 +1,5 @@
+import random
+
 from django.shortcuts import render
 from django.conf import settings
 import requests
@@ -17,6 +19,7 @@ def detail_movie(request, movie_id):
 
     if response.status_code == 200:
         data = response.json()
+        release_date = data.get('release_date') or None
 
         movie, created = Movie.objects.get_or_create(
             id=data['id'],
@@ -27,7 +30,7 @@ def detail_movie(request, movie_id):
                 'adult': data['adult'],
                 'vote_average': data['vote_average'],
                 'overview': data['overview'],
-                'release_date': data.get('release_date'),
+                'release_date': release_date,
                 'poster_path':
                     f"https://image.tmdb.org/t/p/original{data.get('poster_path')}",
                 'backdrop_path':
@@ -50,3 +53,48 @@ def detail_movie(request, movie_id):
     context = {'movie': movie}
     template_name = 'movies/detail_movie.html'
     return render(request, template_name, context)
+
+
+def list_movies(request):
+    page = random.randint(1, 500)
+
+    url = (f"https://api.themoviedb.org/3/discover/movie?"
+           f"api_key={settings.TMDB_API_KEY}&"
+           f"page={page}&"
+           f"language=ru-RU")
+
+    response = requests.get(url)
+    data = response.json()
+    movies = data.get("results", [])
+
+    if not movies:
+        return render(request, "movies/movie_not_found.html", status=404)
+
+    random_movie = random.choice(movies)
+    release_date = random_movie.get('release_date') or None
+
+    movie, created = Movie.objects.get_or_create(
+        id=random_movie['id'],
+        defaults={
+            'id': random_movie['id'],
+            'title': random_movie['title'],
+            'original_title': random_movie['original_title'],
+            'adult': random_movie['adult'],
+            'vote_average': random_movie['vote_average'],
+            'overview': random_movie['overview'],
+            'release_date': release_date,
+            'poster_path':
+                f"https://image.tmdb.org/t/p/original{random_movie.get('poster_path')}",
+            'backdrop_path':
+                f"https://image.tmdb.org/t/p/original{random_movie.get('backdrop_path')}",
+        }
+    )
+
+    genre_ids = []
+    for g in random_movie.get('genre_ids', []):
+        genre_ids.append(g)
+
+    movie.genres.set(Genre.objects.filter(id__in=genre_ids))
+    movie.save()
+
+    return render(request, "movies/list_movies.html", {"movie": movie})
