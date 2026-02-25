@@ -1,7 +1,8 @@
 from django import forms
+from django.core.validators import ValidationError
 
 from movies.models import Genre
-from .models import Room
+from .models import Room, Participant
 
 
 class RoomForm(forms.ModelForm):
@@ -67,6 +68,22 @@ class JoinRoomForm(forms.Form):
         help_text='ID вам сообщит его создатель'
     )
 
-    def clean_name(self):
-        name = self.cleaned_data['name']
-        return ''.join(name.split())
+    def clean(self):
+        cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        room_id = cleaned_data.get('room_id')
+
+        try:
+            room = Room.objects.get(pk=room_id)
+        except Room.DoesNotExist:
+            raise ValidationError("Комната с таким ID не найдена.")
+
+        if Participant.objects.filter(room_id=room, name=name).exists():
+            raise ValidationError("Имя уже занято в этой комнате.")
+
+        if room.participants.count() >= room.count_participants:
+            raise ValidationError("Комната заполнена, больше участников нельзя.")
+
+        self.cleaned_data['room'] = room
+
+        return cleaned_data

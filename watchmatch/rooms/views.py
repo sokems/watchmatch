@@ -46,7 +46,7 @@ def join_room(request):
 
     if form.is_valid():
         room_id = form.cleaned_data['room_id']
-        room = Room.objects.get(id=room_id)
+        room = form.cleaned_data['room']
 
         Participant.objects.create(
             name=form.cleaned_data['name'],
