@@ -1,4 +1,5 @@
-![WatchMatch Logo](./watchmatch/static_dev/img/logo.png) <!-- add logo if available -->
+![WatchMatch Logo](./watchmatch/static_dev/img/logo.png)
+For Russian version see [README.md](README.md)
 
 ## Description
 
