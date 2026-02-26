@@ -10,7 +10,7 @@
       <p><b>ID комнаты:</b> {{ room.id }}</p>
       <p><b>Количество участников:</b> {{ count_participants }} из {{ room.count_participants }}</p>
       <p><b>Участники:</b> {% for participant in participants %}{{ participant.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
-      <p><b>Жанры:</b> {% for genre in room.genres.all %}{{ genre.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+      <p style="line-height: 1;"><b>Жанры:</b> {% for genre in room.genres.all %}{{ genre.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
       <p><b>Годы релиза:</b> {% if room.year_start < room.year_end %}{{ room.year_start }} - {{ room.year_end }}
          {% elif room.year_start > room.year_end %}{{ room.year_end }} - {{ room.year_start }}
          {% else %}{{ room.year_start }}{% endif %}</p>
@@ -18,7 +18,7 @@
       <p><b>Рейтинг:</b> от {{ room.vote_average }}</p>
     </div>
   </div>
-
+  {% if movie %}
   <!-- Блок с фильмом -->
   <div class="card p-3 shadow" style="width: 480px;">
     <!-- Название и постер по центру -->
@@ -53,6 +53,8 @@
       </form>
     </div>
   </div>
-
+  {% else %}
+    <p>{{ message }}</p>
+  {% endif %}
 </div>
 {% endblock %}

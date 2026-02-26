@@ -20,7 +20,6 @@ def play_room(request, room_id, participant_id):
     participants = Participant.objects.filter(room_id=room)
     count_participants = participants.count()
 
-    # Проверяем, есть ли уже выбранный фильм
     selected_movie_swipe = Swipe.objects.filter(room=room, status=True) \
                                         .values('movie') \
                                         .annotate(likes_count=models.Count('id')) \
@@ -76,7 +75,16 @@ def play_room(request, room_id, participant_id):
     ]
 
     if not unwatched_movies:
-        movie = get_object_or_404(Movie, id=0)
+        movie = None
+        context = {
+            'room': room,
+            'participant': participant,
+            'movie': movie,
+            'count_participants': count_participants,
+            'participants': participants,
+            'message': "Нет доступных фильмов для этой комнаты. Создайте комнату с другими фильтрами."
+        }
+        return render(request, 'swipes/play_room.html', context)
     else:
         data = unwatched_movies[0]
         movie = create_and_return_movie(data)
