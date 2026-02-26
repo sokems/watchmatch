@@ -124,3 +124,5 @@ if 'pytest' in sys.modules or 'test' in sys.argv:
             'NAME': ':memory:',
         }
     }
+
+CSRF_FAILURE_VIEW = 'core.views.csrf_failure'
