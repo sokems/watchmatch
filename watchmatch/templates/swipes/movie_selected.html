@@ -23,7 +23,7 @@
   <div class="card p-3 shadow" style="width: 480px;">
     <!-- Название и постер по центру -->
     <div class="text-center mb-2">
-      <h4 class="mb-2">{{ movie.title }}</h4>
+      <h4 class="mb-2">Выбран фильм «{{ movie.title }}»</h4>
       <img src="https://image.tmdb.org/t/p/original{{ movie.poster_path }}" alt="Постер фильма"
            class="poster img-fluid" style="max-width: 400px; max-height: 100%; width: auto; height: auto;">
     </div>
@@ -35,22 +35,6 @@
       <p><b>18+:</b> {% if movie.adult %}Да{% else %}Нет{% endif %}</p>
       <p><b>Рейтинг:</b> {{ movie.vote_average }}</p>
         {% if movie.overview %}<p><b>Описание:</b></p><p style="line-height: 1;">{{ movie.overview }}</p>{% endif %}
-    </div>
-
-    <!-- Кнопки в строку по центру -->
-    <div class="d-flex justify-content-center gap-2">
-      <form method="post" action="{% url 'swipes:play_room' room.id participant.id %}">
-        {% csrf_token %}
-        <input type="hidden" name="movie_id" value="{{ movie.id }}">
-        <input type="hidden" name="action" value="dislike">
-        <button class="btn btn-danger btn-lg">Дизлайк</button>
-      </form>
-      <form method="post" action="{% url 'swipes:play_room' room.id participant.id %}">
-        {% csrf_token %}
-        <input type="hidden" name="movie_id" value="{{ movie.id }}">
-        <input type="hidden" name="action" value="like">
-        <button class="btn btn-success btn-lg">Лайк</button>
-      </form>
     </div>
   </div>
 

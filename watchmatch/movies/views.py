@@ -33,9 +33,7 @@ def list_movies(request):
 
     movie = create_and_return_movie(data)
 
-    genre_ids = []
-    for g in data.get('genre_ids', []):
-        genre_ids.append(g)
+    genre_ids = data.get('genre_ids', [])
 
     movie.genres.set(Genre.objects.filter(id__in=genre_ids))
     movie.save()

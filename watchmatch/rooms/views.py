@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import RoomForm, JoinRoomForm
-from .models import Participant
+from .models import Room, Participant
 
 
 def create_room(request):
@@ -12,12 +12,12 @@ def create_room(request):
     if form.is_valid():
         room = form.save()
 
-        Participant.objects.create(
+        participant = Participant.objects.create(
             name=form.cleaned_data['creator_name'],
             room_id=room
         )
 
-        return redirect('swipes:play_room', room_id=room.id)
+        return redirect('swipes:play_room', room_id=room.id, participant_id=participant.id)
 
     context = {'form': form}
 
@@ -33,12 +33,12 @@ def join_room(request):
         room_id = form.cleaned_data['room_id']
         room = form.cleaned_data['room']
 
-        Participant.objects.create(
+        participant = Participant.objects.create(
             name=form.cleaned_data['name'],
             room_id=room
         )
 
-        return redirect('swipes:play_room', room_id=room_id)
+        return redirect('swipes:play_room', room_id=room_id, participant_id=participant.id)
 
     context = {'form': form}
 

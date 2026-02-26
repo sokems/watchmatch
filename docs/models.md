@@ -48,11 +48,11 @@
 
 5. **Swipe**
 
-| Название поля |                                Тип                                 |                                Описание                                |
-|:-------------:|:------------------------------------------------------------------:|:----------------------------------------------------------------------:|
-|      id       |                           IntegerField()                           |                             Идентификатор                              |
-|     room      | ForeignKey(Room, on_delete=models.CASCADE, related_name='swipes')  |                         Идентификатор комнаты                          |
-|     movie     | ForeignKey(Movie, on_delete=models.CASCADE, related_name='swipes') |                          Идентификатор фильма                          |
-|    status     |                     BooleanField(default=True)                     | Статус голосования, если кто то поставил дизлайк, то меняется на false |
-|  count_likes  |                    PositiveSmallIntegerField()                     |                           Количество лайков                            |
+| Название поля |                                   Тип                                    |       Описание        |
+|:-------------:|:------------------------------------------------------------------------:|:---------------------:|
+|      id       |                              IntegerField()                              |     Идентификатор     |
+|     room      |    ForeignKey(Room, on_delete=models.CASCADE, related_name='swipes')     | Идентификатор комнаты |
+|     movie     |    ForeignKey(Movie, on_delete=models.CASCADE, related_name='swipes')    | Идентификатор фильма  |
+|    status     |                        BooleanField(default=True)                        |      Like - True      |
+|  participant  | ForeignKey(Participant, on_delete=models.CASCADE, related_name='swipes') |       Чей лайк        |
 

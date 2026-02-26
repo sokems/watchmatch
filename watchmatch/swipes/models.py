@@ -1,5 +1,7 @@
 from django.db import models
 
+from rooms.models import Participant
+
 
 class Swipe(models.Model):
     """
@@ -34,4 +36,8 @@ class Swipe(models.Model):
         related_name='swipes',
     )
     status = models.BooleanField(default=True)
-    count_likes = models.PositiveSmallIntegerField()
+    participant = models.ForeignKey(
+        Participant,
+        on_delete=models.CASCADE,
+        related_name='swipes'
+    )
