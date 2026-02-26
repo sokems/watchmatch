@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect
 from django.shortcuts import render
 from django.db import models
+from django.core.cache import cache
 
 from rooms.models import Participant, Room
 from .models import Swipe
@@ -58,13 +59,20 @@ def play_room(request, room_id, participant_id):
             participant_id=participant_id
         )
 
+    cache_key = f"movies_for_room_{room.id}"
+    movies_list = cache.get(cache_key)
+
+    if not movies_list:
+        movies_list = get_movies_from_tmdb_by_room(room)
+        cache.set(cache_key, movies_list, timeout=60 * 120)
+
     swiped_movie_ids = Swipe.objects.filter(
         participant=participant,
         room=room
     ).values_list('movie_id', flat=True)
 
     unwatched_movies = [
-        m for m in get_movies_from_tmdb_by_room(room) if m['id'] not in swiped_movie_ids
+        m for m in movies_list if m['id'] not in swiped_movie_ids
     ]
 
     if not unwatched_movies:
