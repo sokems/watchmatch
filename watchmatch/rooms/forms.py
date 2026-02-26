@@ -6,6 +6,9 @@ from .models import Room, Participant
 
 
 class RoomForm(forms.ModelForm):
+    """
+    Форма для создания комнаты
+    """
     creator_name = forms.CharField(
         max_length=50,
         label='Ваше имя',
@@ -58,6 +61,9 @@ class RoomForm(forms.ModelForm):
 
 
 class JoinRoomForm(forms.Form):
+    """
+    Форма для подключения к комнате
+    """
     name = forms.CharField(
         max_length=50,
         label='Имя',

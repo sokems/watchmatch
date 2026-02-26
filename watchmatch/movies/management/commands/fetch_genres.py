@@ -4,11 +4,16 @@ import requests
 
 from movies.models import Genre
 
+
 class Command(BaseCommand):
     help = "Загружает список жанров с TMDB и сохраняет в базу"
 
     def handle(self, *args, **options):
-        url = f"https://api.themoviedb.org/3/genre/movie/list?api_key={settings.TMDB_API_KEY}&language=ru-RU"
+        url = (
+            f"https://api.themoviedb.org/3/genre/movie/list?"
+            f"api_key={settings.TMDB_API_KEY}"
+            f"&language=ru-RU"
+        )
         response = requests.get(url)
         data = response.json()
 

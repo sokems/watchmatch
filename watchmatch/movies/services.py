@@ -6,7 +6,14 @@ import requests
 from .models import Movie
 
 
-def get_movie_tmdb(movie_id: int=None) -> dict:
+def get_movie_tmdb(movie_id=None) -> dict:
+    """
+    Делает обращение к сервису TMDB,
+    получает либо случайный фильм
+    либо конкретный по movie_id.
+
+    Возвращает словарь с данными фильма
+    """
     if movie_id:
         url = (
             f"https://api.themoviedb.org/3/movie/"
@@ -41,6 +48,12 @@ def get_movie_tmdb(movie_id: int=None) -> dict:
 
 
 def create_and_return_movie(data: dict) -> Movie:
+    """
+    Проверяет существование фильма в БД,
+    при отсутствии создает его
+
+    Возвращает объект Movie
+    """
     release_date = data.get('release_date') or None
 
     movie = Movie.objects.get_or_create(

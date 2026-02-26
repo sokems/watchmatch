@@ -1,7 +1,5 @@
 from django.db import models
 
-from rooms.models import Participant
-
 
 class Swipe(models.Model):
     """
@@ -13,12 +11,12 @@ class Swipe(models.Model):
     Связи:
     - room — комната, в которой происходит голосование
     - movie — фильм, за который голосуют участники
+    - participant - участник комнаты
 
     Поля:
     - status — итоговое решение по фильму:
         True  — фильм принят (match)
         False — фильм отклонён
-    - count_likes — количество лайков от участников комнаты
 
     Логика работы:
     Когда число лайков достигает количества участников комнаты,
@@ -37,7 +35,7 @@ class Swipe(models.Model):
     )
     status = models.BooleanField(default=True)
     participant = models.ForeignKey(
-        Participant,
+        'rooms.Participant',
         on_delete=models.CASCADE,
         related_name='swipes'
     )

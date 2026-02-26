@@ -5,8 +5,7 @@ from .services import get_movie_tmdb, create_and_return_movie
 
 
 def detail_movie(request, movie_id):
-    """Страница фильма"""
-
+    """Страница конкретного фильма"""
     data = get_movie_tmdb(movie_id)
 
     if not data or 'id' not in data:

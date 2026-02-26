@@ -5,7 +5,11 @@ from django.db import models
 from rooms.models import Participant, Room
 from .models import Swipe
 from movies.models import Movie, Genre
-from movies.services import create_and_return_movie, get_movies_from_tmdb_by_room, get_movie_tmdb
+from movies.services import (
+    create_and_return_movie,
+    get_movies_from_tmdb_by_room,
+    get_movie_tmdb
+)
 
 
 def play_room(request, room_id, participant_id):
@@ -22,7 +26,8 @@ def play_room(request, room_id, participant_id):
                                         .order_by('-likes_count') \
                                         .first()
 
-    if selected_movie_swipe and selected_movie_swipe['likes_count'] >= count_participants:
+    if (selected_movie_swipe
+            and selected_movie_swipe['likes_count'] >= count_participants):
         movie = get_object_or_404(Movie, id=selected_movie_swipe['movie'])
         context = {
             'room': room,
@@ -47,11 +52,20 @@ def play_room(request, room_id, participant_id):
             defaults={"status": action == "like"},
         )
 
-        return redirect('swipes:play_room', room_id=room_id, participant_id=participant_id)
+        return redirect(
+            'swipes:play_room',
+            room_id=room_id,
+            participant_id=participant_id
+        )
 
-    swiped_movie_ids = Swipe.objects.filter(participant=participant, room=room).values_list('movie_id', flat=True)
+    swiped_movie_ids = Swipe.objects.filter(
+        participant=participant,
+        room=room
+    ).values_list('movie_id', flat=True)
 
-    unwatched_movies = [m for m in get_movies_from_tmdb_by_room(room) if m['id'] not in swiped_movie_ids]
+    unwatched_movies = [
+        m for m in get_movies_from_tmdb_by_room(room) if m['id'] not in swiped_movie_ids
+    ]
 
     if not unwatched_movies:
         movie = get_object_or_404(Movie, id=0)
