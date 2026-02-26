@@ -31,4 +31,3 @@ def bad_request(request, exception):
 def server_error(request):
     """Ошибка сервера"""
     return render(request, 'core/500.html', status=500)
-
