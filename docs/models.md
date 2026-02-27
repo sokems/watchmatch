@@ -27,7 +27,7 @@
 | Название поля |                                              Тип                                               |                     Описание                      |
 |:-------------:|:----------------------------------------------------------------------------------------------:|:-------------------------------------------------:|
 |      id       |                                              auto                                              |                   Идентификатор                   |
-|     name      |                                    CharField(max_length=50)                                    |                   Имя участника                   |
+|     user      |           models.ForeignKey(User, verbose_name='Никнейм', on_delete=models.CASCADE)            |                   Имя участника                   |
 |    room_id    | ForeignKey(Room, on_delete=models.CASCADE, related_name='participants', null=True, blank=True) | Идентификатор комнаты к которой подключился игрок |
 
 
