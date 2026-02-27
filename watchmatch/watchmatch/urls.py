@@ -9,6 +9,7 @@ handler500 = 'core.views.server_error'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('auth/', include('django.contrib.auth.urls')),
     path('', include('core.urls')),
     path('movies/', include('movies.urls')),
     path('rooms/', include('rooms.urls')),

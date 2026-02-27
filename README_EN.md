@@ -76,6 +76,8 @@ DB_PASSWORD='<db_password>'
 DB_HOST='<db_host>'
 DB_PORT=<db_port>
 TMDB_API_KEY='<your_tmdb_api_key>'
+EMAIL_HOST_USER='<email_for_smtp>'
+EMAIL_HOST_PASSWORD='<password_email>'
 ```
 
 4. Install dependencies:

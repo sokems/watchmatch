@@ -75,6 +75,8 @@ DB_PASSWORD='<db_password>'
 DB_HOST='<db_host>'
 DB_PORT=<db_port>
 TMDB_API_KEY='<ваш_ключ_tmdb_api>'
+EMAIL_HOST_USER='<email_для_smtp>'
+EMAIL_HOST_PASSWORD='<пароль_email>'
 ```
 
 4. Устанавливаем зависимости:
