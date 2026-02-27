@@ -31,6 +31,9 @@
         <li class="nav-item">
           <a class="nav-link {% if view_name  == 'rooms:join_room' %}active{% endif %}" href="{% url 'rooms:join_room' %}">Подключиться</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link {% if view_name  == 'rooms:list_rooms' %}active{% endif %}" href="{% url 'rooms:list_rooms' %}">Список комнат со мной</a>
+        </li>
         <span class="navbar-text ms-4">Пользователь: <b>{{ user.username }}</b></span>
         <li class="nav-item">
           <form method="post" action="{% url 'users:logout' %}" >

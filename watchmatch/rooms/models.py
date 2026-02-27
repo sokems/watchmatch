@@ -6,6 +6,7 @@ from .validators import (
     validate_vote_average,
     validate_year
 )
+from movies.models import Movie
 
 
 User = get_user_model()
@@ -26,7 +27,7 @@ class Room(models.Model):
     """
 
     name = models.CharField(
-        max_length=100,
+        max_length=12,
         verbose_name='Название',
         help_text='не должно превышать 100 символов'
     )
@@ -60,6 +61,13 @@ class Room(models.Model):
         verbose_name='Средний рейтинг',
         help_text='Средний рейтинг по TMDB',
         validators=(validate_vote_average,)
+    )
+    is_playing = models.BooleanField(default=True)
+    select_movie = models.ForeignKey(
+        Movie,
+        verbose_name='Выбранный фильм',
+        on_delete=models.CASCADE,
+        null=True,
     )
 
     class Meta:

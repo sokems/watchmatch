@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+  {% if not rooms %}
+    <h3 class="text-center">Игры с вашим участием пока не проводились</h3>
+  {% else %}
+    <div class="row g-4">
+      {% load dict_filters %}
+      {% for room in rooms %}
+        {% with participants_dict|get_item:room.id as participant %}
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="card p-3 shadow h-100">
+              <h3 class="card-title mb-2 text-center">Комната <br>«{{ room.name }}»</h3>
+              <div class="room-info" style="text-align: left; line-height: 0.5; font-size: 1rem;">
+                <p><b>ID комнаты:</b> {{ room.id }}</p>
+                <p><b>Количество участников:</b> {{ room.count_participants }}</p>
+                <p style="line-height: 1;"><b>Жанры:</b> {% for genre in room.genres.all %}{{ genre.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+                <p><b>Годы релиза:</b> {% if room.year_start < room.year_end %}{{ room.year_start }} - {{ room.year_end }}
+                  {% elif room.year_start > room.year_end %}{{ room.year_end }} - {{ room.year_start }}
+                  {% else %}{{ room.year_start }}{% endif %}</p>
+                <p><b>18+:</b> {% if room.adult %}Да{% else %}Нет{% endif %}</p>
+                <p><b>Рейтинг:</b> от {{ room.vote_average }}</p><br>
+                {% if room.is_playing %}<b style="line-height: 1;">Фильм не выбран</b>{% else %}<b style="line-height: 1;">Выбран фильм «{{ room.select_movie.title }}»</b>{% endif %}
+
+                {% if room.is_playing %}
+                  <div class="d-flex justify-content-center gap-2 mt-3">
+                    <form method="post" action="{% url 'swipes:play_room' room.id participant.id %}">
+                      {% csrf_token %}
+                      <button class="btn btn-primary btn-lg">Войти в комнату</button>
+                    </form>
+                  </div>
+                {% else %}
+                  <div class="d-flex justify-content-center gap-2 mt-3">
+                    <form method="post" action="{% url 'movies:detail_movie' room.select_movie.id %}">
+                      {% csrf_token %}
+                      <button class="btn btn-primary btn-lg">Подробнее о фильме</button>
+                    </form>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endwith %}
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

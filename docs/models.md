@@ -2,16 +2,18 @@
 
 1. **Room:**
 
-|   Название поля    |                     Тип                      |       Описание        |
-|:------------------:|:--------------------------------------------:|:---------------------:|
-|         id         |                     auto                     |     Идентификатор     |
-|        name        |          CharField(max_length=100)           |   Название комнаты    |
-| count_participants |         PositiveSmallIntegerField()          | Количество участников |
-|       genres       | ManyToManyField(Genre, related_name='rooms') |    Выбранные жанры    |
-|     year_start     |         PositiveSmallIntegerField()          |   Период релизов от   |
-|      year_end      |         PositiveSmallIntegerField()          |   Период релизов до   |
-|       adult        |                BooleanField()                |       Якорь 18+       |
-|    vote_average    | DecimalField(max_digits=4, decimal_places=2) |  Минимальный рейтинг  |
+|   Название поля    |                                              Тип                                              |        Описание        |
+|:------------------:|:---------------------------------------------------------------------------------------------:|:----------------------:|
+|         id         |                                             auto                                              |     Идентификатор      |
+|        name        |                                   CharField(max_length=12)                                    |    Название комнаты    |
+| count_participants |                                  PositiveSmallIntegerField()                                  | Количество участников  |
+|       genres       |                         ManyToManyField(Genre, related_name='rooms')                          |    Выбранные жанры     |
+|     year_start     |                                  PositiveSmallIntegerField()                                  |   Период релизов от    |
+|      year_end      |                                  PositiveSmallIntegerField()                                  |   Период релизов до    |
+|       adult        |                                        BooleanField()                                         |       Якорь 18+        |
+|    vote_average    |                         DecimalField(max_digits=4, decimal_places=2)                          |  Минимальный рейтинг   |
+|     is_playing     |                               models.BooleanField(default=True)                               |  Якорь активной игры   |
+|    select_movie    | models.ForeignKey(Movie, verbose_name='Выбранный фильм', on_delete=models.CASCADE, null=True) | Фильм, который выбрали |
 
 
 2. **Genre:**

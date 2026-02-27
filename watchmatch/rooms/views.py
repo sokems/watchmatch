@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
 
 from .forms import RoomForm, JoinRoomForm
-from .models import Participant
+from .models import Participant, Room
 
 
 User = get_user_model()
@@ -58,5 +58,27 @@ def join_room(request):
         )
 
     context = {'form': form}
+
+    return render(request, template_name, context)
+
+
+@login_required
+def list_play_rooms(request):
+    """
+    Отображает список комнат,
+    в которой состоит пользователь
+    """
+    template_name = 'rooms/list_rooms.html'
+    rooms = Room.objects.filter(participants__name=request.user).distinct()
+
+    participants_dict = {
+        room.id: room.participants.get(name=request.user)
+        for room in rooms
+    }
+
+    context = {
+        'rooms': rooms,
+        'participants_dict': participants_dict
+    }
 
     return render(request, template_name, context)

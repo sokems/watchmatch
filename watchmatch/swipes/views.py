@@ -41,9 +41,13 @@ def play_room(request, room_id, participant_id):
             'count_participants': count_participants,
             'participants': participants
         }
+        room.is_playing = False
+        room.select_movie = movie
+        room.save()
+
         return render(request, 'swipes/movie_selected.html', context)
 
-    if request.method == "POST":
+    if request.method == "POST" and request.POST.get("movie_id"):
         movie_id = request.POST.get("movie_id")
         action = request.POST.get("action")
 
