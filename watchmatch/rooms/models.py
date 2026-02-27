@@ -29,7 +29,7 @@ class Room(models.Model):
     name = models.CharField(
         max_length=12,
         verbose_name='Название',
-        help_text='не должно превышать 100 символов'
+        help_text='не должно превышать 12 символов'
     )
     count_participants = models.PositiveSmallIntegerField(
         verbose_name='Количество участников',
