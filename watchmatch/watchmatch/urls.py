@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include,reverse_lazy
 from django.conf import settings
 
 handler400 = 'core.views.bad_request'
@@ -9,7 +9,7 @@ handler500 = 'core.views.server_error'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('auth/', include('django.contrib.auth.urls')),
+    path('auth/', include('users.urls')),
     path('', include('core.urls')),
     path('movies/', include('movies.urls')),
     path('rooms/', include('rooms.urls')),

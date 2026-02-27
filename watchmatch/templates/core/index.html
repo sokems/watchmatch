@@ -8,7 +8,11 @@
     WatchMatch делает процесс выбора простым и веселым — больше никаких долгих поисков,
     только совместное удовольствие и отличное настроение!
   </p>
-  <a href="{% url 'rooms:create_room' %}" class="btn btn-primary btn-lg mt-3">Создать комнату</a>
-  <a href="{% url 'rooms:join_room' %}" class="btn btn-primary btn-lg mt-3">Подключиться к комнате</a>
+  {% if user.is_authenticated %}
+    <a href="{% url 'rooms:create_room' %}" class="btn btn-primary btn-lg mt-3">Создать комнату</a>
+    <a href="{% url 'rooms:join_room' %}" class="btn btn-primary btn-lg mt-3">Подключиться к комнате</a>
+  {% else %}
+    <a href="{% url 'users:registration' %}" class="btn btn-primary btn-lg mt-3">Регистрация</a>
+  {% endif %}
 </div>
 {% endblock %}

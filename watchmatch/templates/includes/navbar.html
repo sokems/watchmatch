@@ -18,6 +18,7 @@
     <!-- Меню справа -->
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav">
+        {% if user.is_authenticated %}
         <li class="nav-item">
           <a class="nav-link {% if view_name  == 'core:index' %}active{% endif %}" href="{% url 'core:index' %}">Главная</a>
         </li>
@@ -30,6 +31,19 @@
         <li class="nav-item">
           <a class="nav-link {% if view_name  == 'rooms:join_room' %}active{% endif %}" href="{% url 'rooms:join_room' %}">Подключиться</a>
         </li>
+        <span class="navbar-text ms-4">Пользователь: <b>{{ user.username }}</b></span>
+        <li class="nav-item">
+          <form method="post" action="{% url 'users:logout' %}" >
+            {% csrf_token %}
+            <button type="submit" class="nav-link">Выйти</button>
+          </form>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link{% if view_name == 'users:login' %} active {% endif %}" href="{% url 'users:login' %}">Войти</a>
+        </li>
+        {% endif %}
+      </ul>
       </ul>
     </div>
   </div>
