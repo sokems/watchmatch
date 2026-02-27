@@ -1,9 +1,15 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.contrib.auth import get_user_model
 
 from .forms import RoomForm, JoinRoomForm
 from .models import Participant
 
 
+User = get_user_model()
+
+
+@login_required
 def create_room(request):
     """Создание новой комнаты для игры"""
     template_name = 'rooms/create_room.html'
@@ -11,9 +17,10 @@ def create_room(request):
 
     if form.is_valid():
         room = form.save()
+        user = request.user
 
         participant = Participant.objects.create(
-            name=form.cleaned_data['creator_name'],
+            name=user,
             room_id=room
         )
 
@@ -28,6 +35,7 @@ def create_room(request):
     return render(request, template_name, context)
 
 
+@login_required
 def join_room(request):
     """Страница подключения к комнате"""
     template_name = 'rooms/join_room.html'
@@ -36,9 +44,10 @@ def join_room(request):
     if form.is_valid():
         room_id = form.cleaned_data['room_id']
         room = form.cleaned_data['room']
+        user = request.user
 
         participant = Participant.objects.create(
-            name=form.cleaned_data['name'],
+            name=user,
             room_id=room
         )
 

@@ -1,10 +1,14 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 
 from .validators import (
     validate_participants_count,
     validate_vote_average,
     validate_year
 )
+
+
+User = get_user_model()
 
 
 class Room(models.Model):
@@ -74,11 +78,12 @@ class Participant(models.Model):
     за фильмы внутри комнаты.
     """
 
-    name = models.CharField(
-        max_length=50,
-        verbose_name='Имя',
-        help_text='максимальное количество символов 50'
+    name = models.ForeignKey(
+        User,
+        verbose_name='Никнейм',
+        on_delete=models.CASCADE
     )
+
     room_id = models.ForeignKey(
         Room,
         on_delete=models.CASCADE,

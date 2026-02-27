@@ -1,9 +1,11 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
 from .models import Genre
 from .services import get_movie_tmdb, create_and_return_movie
 
 
+@login_required
 def detail_movie(request, movie_id):
     """Страница конкретного фильма"""
     data = get_movie_tmdb(movie_id)
@@ -26,6 +28,7 @@ def detail_movie(request, movie_id):
     return render(request, 'movies/detail_movie.html', {'movie': movie})
 
 
+@login_required
 def list_movies(request):
     """Страница случайного фильма"""
     data = get_movie_tmdb()

@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 from django.shortcuts import render
 from django.db import models
@@ -13,12 +14,16 @@ from movies.services import (
 )
 
 
+@login_required
 def play_room(request, room_id, participant_id):
     """Комната для игры"""
     room = get_object_or_404(Room, id=room_id)
     participant = get_object_or_404(Participant, id=participant_id)
     participants = Participant.objects.filter(room_id=room)
     count_participants = participants.count()
+
+    if participant.name != request.user:
+        return redirect('core:index')
 
     selected_movie_swipe = Swipe.objects.filter(room=room, status=True) \
                                         .values('movie') \

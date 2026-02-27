@@ -9,11 +9,6 @@ class RoomForm(forms.ModelForm):
     """
     Форма для создания комнаты
     """
-    creator_name = forms.CharField(
-        max_length=50,
-        label='Ваше имя',
-        help_text='максимальное количество символов 50'
-    )
     count_participants = forms.TypedChoiceField(
         choices=[(i, i) for i in range(1, 5)],
         coerce=int,
@@ -44,31 +39,17 @@ class RoomForm(forms.ModelForm):
             'year_end',
             'adult',
             'vote_average',
-            'creator_name',
         ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['genres'].queryset = Genre.objects.all()
 
-    def clean_creator_name(self):
-        creator_name = self.cleaned_data['creator_name']
-        return ''.join(creator_name.split())
-
-    def clean_name(self):
-        name = self.cleaned_data['name']
-        return ''.join(name.split())
-
 
 class JoinRoomForm(forms.Form):
     """
     Форма для подключения к комнате
     """
-    name = forms.CharField(
-        max_length=50,
-        label='Имя',
-        help_text='введите свое имя'
-    )
     room_id = forms.IntegerField(
         label='ID комнаты',
         help_text='ID вам сообщит его создатель'
@@ -76,16 +57,12 @@ class JoinRoomForm(forms.Form):
 
     def clean(self):
         cleaned_data = super().clean()
-        name = cleaned_data.get('name')
         room_id = cleaned_data.get('room_id')
 
         try:
             room = Room.objects.get(pk=room_id)
         except Room.DoesNotExist:
             raise ValidationError("Комната с таким ID не найдена.")
-
-        if Participant.objects.filter(room_id=room, name=name).exists():
-            raise ValidationError("Имя уже занято в этой комнате.")
 
         if room.participants.count() >= room.count_participants:
             raise ValidationError("Комната заполнена, больше участников нельзя.")
