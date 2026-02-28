@@ -2,7 +2,7 @@ from django import forms
 from django.core.validators import ValidationError
 
 from movies.models import Genre
-from .models import Room, Participant
+from .models import Room
 
 
 class RoomForm(forms.ModelForm):

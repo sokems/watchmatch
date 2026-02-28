@@ -91,7 +91,9 @@ def play_room(request, room_id, participant_id):
             'movie': movie,
             'count_participants': count_participants,
             'participants': participants,
-            'message': "Нет доступных фильмов для этой комнаты. Создайте комнату с другими фильтрами."
+            'message':
+                "Нет доступных фильмов для этой комнаты. "
+                "Создайте комнату с другими фильтрами."
         }
         return render(request, 'swipes/play_room.html', context)
     else:

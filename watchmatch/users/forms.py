@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True, help_text="Введите корректный email")
 

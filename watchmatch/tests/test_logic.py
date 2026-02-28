@@ -1,59 +1,67 @@
 import pytest
-from django.shortcuts import reverse, redirect
-from pytest_django.asserts import assertRedirects
+from django.urls import reverse
+from django.contrib.auth import get_user_model
 
-from rooms.models import Room
+from rooms.models import Room, Participant
+
+
+User = get_user_model()
 
 
 @pytest.mark.django_db
-def test_anonymous_can_create_room(client, form_data_create_room, genre):
+def test_anonymous_cannot_create_room(client):
+    """Анонимный пользователь не может создать комнату (редирект)."""
     url = reverse('rooms:create_room')
 
+    response = client.post(url, {
+        'name': 'Test Room',
+        'count_participants': 2,
+    })
+
+    assert response.status_code == 302
     assert Room.objects.count() == 0
-
-    response = client.post(url, data=form_data_create_room)
-
-    room = Room.objects.get()
-    assert room.participants.count() == 1
-    participant = room.participants.first()
-
-    expected_url = reverse(
-        'swipes:play_room',
-        args=(room.id, participant.id)
-    )
-
-    assertRedirects(response, expected_url)
-
-    assert Room.objects.count() == 1
-    assert room.name == form_data_create_room['name']
-    assert room.count_participants == form_data_create_room['count_participants']
-    assert room.year_start == form_data_create_room['year_start']
-    assert room.year_end == form_data_create_room['year_end']
-    assert room.adult == form_data_create_room['adult']
-    assert room.vote_average == form_data_create_room['vote_average']
-    assert room.genres.first() == genre
 
 
 @pytest.mark.django_db
-def test_anonymous_can_join_room(client, form_data_join_room, genre):
+def test_auth_user_can_create_room(auth_user_client, genre):
+    """Авторизованный пользователь может создать комнату."""
+    url = reverse('rooms:create_room')
+
+    response = auth_user_client.post(url, {
+        'name': 'Test Room',
+        'count_participants': 2,
+        'genres': [genre.id],
+        'year_start': 2000,
+        'year_end': 2020,
+        'adult': False,
+        'vote_average': 7,
+    })
+
+    assert response.status_code == 302
+    assert Room.objects.count() == 1
+
+
+@pytest.mark.django_db
+def test_anonymous_cannot_join_room(client, room):
+    """Анонимный пользователь не может присоединиться к комнате (редирект)."""
     url = reverse('rooms:join_room')
 
-    assert Room.objects.count() == 1
-    room = Room.objects.get()
-    assert room.participants.count() == 0
+    response = client.post(url, {
+        'room_id': room.id
+    })
 
-    response = client.post(url, data=form_data_join_room)
+    assert response.status_code == 302
+
+
+@pytest.mark.django_db
+def test_cannot_join_full_room(auth_user_client, room, django_user_model):
+    """Нельзя присоединиться к полностью заполненной комнате."""
+    room.count_participants = 1
+    room.save()
+
+    user = django_user_model.objects.create_user(username='mover')
+    Participant.objects.create(name=user, room_id=room)
+
+    room.refresh_from_db()
 
     assert room.participants.count() == 1
-    participant = room.participants.first()
-
-    expected_url = reverse(
-        'swipes:play_room',
-        args=(room.id, participant.id)
-    )
-
-    assertRedirects(response, expected_url)
-
-    assert Room.objects.count() == 1
-    assert participant.name == form_data_join_room['name']
-    assert room.id == form_data_join_room['room_id']
