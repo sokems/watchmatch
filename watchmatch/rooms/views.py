@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
@@ -7,6 +9,7 @@ from .models import Participant, Room
 
 
 User = get_user_model()
+logger = logging.getLogger(__name__)
 
 
 @login_required
@@ -30,6 +33,9 @@ def create_room(request):
             participant_id=participant.id
         )
 
+    if form.errors:
+        logger.warning(f"Failed to create room by user {request.user.id}: {form.errors}")
+
     context = {'form': form}
 
     return render(request, template_name, context)
@@ -51,11 +57,16 @@ def join_room(request):
             room_id=room
         )
 
+        logger.info(f"User {user.id} joined room {room_id} as participant {participant.id}")
+
         return redirect(
             'swipes:play_room',
             room_id=room_id,
             participant_id=participant.id
         )
+
+    if form.errors:
+        logger.warning(f"User {request.user.id} failed to join room: {form.errors}")
 
     context = {'form': form}
 

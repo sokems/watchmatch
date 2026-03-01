@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 from django.shortcuts import render
@@ -14,6 +16,9 @@ from movies.services import (
 )
 
 
+logger = logging.getLogger(__name__)
+
+
 @login_required
 def play_room(request, room_id, participant_id):
     """Комната для игры"""
@@ -22,7 +27,12 @@ def play_room(request, room_id, participant_id):
     participants = Participant.objects.filter(room_id=room)
     count_participants = participants.count()
 
+
     if participant.name != request.user:
+        logger.warning(
+            f"User {request.user.id} tried to access "
+            f"room {room_id} as participant {participant_id}, but failed verification"
+        )
         return redirect('core:index')
 
     selected_movie_swipe = Swipe.objects.filter(room=room, status=True) \
@@ -45,6 +55,12 @@ def play_room(request, room_id, participant_id):
         room.select_movie = movie
         room.save()
 
+        logger.info(
+            f"Movie {selected_movie_swipe['movie']} "
+            f"selected in room {room.id} "
+            f"with {selected_movie_swipe['likes_count']} likes"
+        )
+
         return render(request, 'swipes/movie_selected.html', context)
 
     if request.method == "POST" and request.POST.get("movie_id"):
@@ -61,6 +77,12 @@ def play_room(request, room_id, participant_id):
             defaults={"status": action == "like"},
         )
 
+        logger.info(
+            f"User {participant.name.id} "
+            f"{'liked' if action == 'like' else 'disliked'} "
+            f"movie {movie.id} in room {room.id}"
+        )
+
         return redirect(
             'swipes:play_room',
             room_id=room_id,
@@ -73,6 +95,10 @@ def play_room(request, room_id, participant_id):
     if not movies_list:
         movies_list = get_movies_from_tmdb_by_room(room)
         cache.set(cache_key, movies_list, timeout=60 * 120)
+        logger.debug(
+            f"Cache updated for room "
+            f"{room.id} with {len(movies_list)} movies"
+        )
 
     swiped_movie_ids = Swipe.objects.filter(
         participant=participant,
@@ -95,6 +121,10 @@ def play_room(request, room_id, participant_id):
                 "Нет доступных фильмов для этой комнаты. "
                 "Создайте комнату с другими фильтрами."
         }
+        logger.warning(
+            f"No unwatched movies left for user "
+            f"{participant.name.id} in room {room.id}"
+        )
         return render(request, 'swipes/play_room.html', context)
     else:
         data = unwatched_movies[0]

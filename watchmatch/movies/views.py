@@ -1,8 +1,13 @@
+import logging
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
 from .models import Genre
 from .services import get_movie_tmdb, create_and_return_movie
+
+
+logger = logging.getLogger(__name__)
 
 
 @login_required
@@ -11,6 +16,7 @@ def detail_movie(request, movie_id):
     data = get_movie_tmdb(movie_id)
 
     if not data or 'id' not in data:
+        logger.warning(f'Movie not found {data}, movie_id: {movie_id}')
         return render(request, "movies/movie_not_found.html", status=404)
 
     movie = create_and_return_movie(data)

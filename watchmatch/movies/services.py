@@ -1,4 +1,6 @@
 import random
+import logging
+from http import HTTPStatus
 
 from django.conf import settings
 import requests
@@ -6,10 +8,13 @@ import requests
 from .models import Movie
 
 
+logger = logging.getLogger(__name__)
+
+
 def get_movie_tmdb(movie_id=None) -> dict:
     """
     Делает обращение к сервису TMDB,
-    получает либо случайный фильм
+    получает либо случайный фильм,
     либо конкретный по movie_id.
 
     Возвращает словарь с данными фильма
@@ -32,7 +37,11 @@ def get_movie_tmdb(movie_id=None) -> dict:
 
     response = requests.get(url)
 
-    if response.status_code != 200:
+    if response.status_code != HTTPStatus.OK:
+        logger.error(
+            f'The TMDB server did not return a response: '
+            f'status_code={response.status_code}, url={response.url}'
+        )
         return {}
 
     data = response.json()
@@ -42,7 +51,12 @@ def get_movie_tmdb(movie_id=None) -> dict:
     else:
         movies = data.get("results", [])
         if not movies:
+            logger.error(
+                f'The TMDB server did not return a movie: '
+                f'data={data}'
+            )
             return {}
+
         random_movie = random.choice(movies)
         return random_movie
 
@@ -78,7 +92,7 @@ def create_and_return_movie(data: dict) -> Movie:
 def get_movies_from_tmdb_by_room(room, count=50) -> list[dict]:
     """
     Возвращает список фильмов из TMDB по фильтрам комнаты.
-    count - сколько фильмов нужно вернуть
+    - count: сколько фильмов нужно вернуть
     """
     genre_ids = ",".join(str(g.id) for g in room.genres.all())
     gte = min(room.year_start, room.year_end)
@@ -102,11 +116,19 @@ def get_movies_from_tmdb_by_room(room, count=50) -> list[dict]:
 
         response = requests.get(url)
         if response.status_code != 200:
+            logger.error(
+                f'The TMDB server did not return a response: '
+                f'room_id={room.pk}, status_code={response.status_code}, url={response.url}'
+            )
             break
 
         data = response.json()
         results = data.get("results", [])
         if not results:
+            logger.error(
+                f'The TMDB server did not return a movie: '
+                f'room_id={room.pk}, data={data}'
+            )
             break
 
         movies.extend(results)

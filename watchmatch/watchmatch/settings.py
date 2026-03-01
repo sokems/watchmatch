@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 import sys
+import logging.handlers
 
 from dotenv import load_dotenv
 
@@ -8,6 +9,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+DIR_LOGS = BASE_DIR / 'logs'
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'fallback_key_for_dev')
 
@@ -139,3 +142,52 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 LOGIN_REDIRECT_URL = 'core:index'
 LOGIN_URL = 'users:login'
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+
+    "formatters": {
+        "simple": {
+            "format": "{levelname} {asctime}, {name}, line:{lineno}, {message}",
+            "style": "{",
+        },
+    },
+
+    "handlers": {},
+
+    "loggers": {
+        "django.request": {
+            "handlers": ["console"] if DEBUG else ["file"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+        "": {
+            "handlers": [],
+            "level": "DEBUG",
+        },
+    },
+}
+
+if DEBUG:
+    LOGGING["handlers"]["console"] = {
+        "class": "logging.StreamHandler",
+        "level": "DEBUG",
+        "formatter": "simple",
+    }
+
+    LOGGING["loggers"][""]["handlers"] = ["console"]
+
+else:
+    LOGGING["handlers"]["file"] = {
+        "class": "logging.handlers.TimedRotatingFileHandler",
+        "filename": os.path.join(DIR_LOGS, "production.log"),
+        "when": "midnight",
+        "interval": 1,
+        "backupCount": 7,
+        "level": "INFO",
+        "formatter": "simple",
+        "encoding": "utf-8",
+    }
+
+    LOGGING["loggers"][""]["handlers"] = ["file"]
