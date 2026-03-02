@@ -1,7 +1,8 @@
 import logging
 
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.views import APIView
+from rest_framework import generics
 from rest_framework.response import Response
 
 from movies.models import Movie
@@ -12,28 +13,15 @@ from .serializers import MovieSerializer, RoomSerializer
 logger = logging.getLogger(__name__)
 
 
-@api_view(['GET'])
-def detail_movie(request, movie_id):
+class MovieDetail(generics.RetrieveAPIView):
     """
     Возвращает данные о фильме по его id в виде словаря
     """
-    movie = Movie.objects.get(pk=movie_id)
-    serializer = MovieSerializer(movie)
-    return Response(serializer.data)
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
 
 
-@api_view(['POST'])
-def create_room(request):
+class CreateRoom(generics.CreateAPIView):
     """Создает новую комнату для игры"""
-    serializer = RoomSerializer(data=request.data)
-
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    logger.warning(
-        f"Room creation failed. "
-        f"Request data: {request.data}. "
-        f"Validation errors: {serializer.errors}"
-    )
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializer
