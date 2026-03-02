@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_bootstrap5',
+    'rest_framework',
     'debug_toolbar',
     'core.apps.CoreConfig',
     'movies.apps.MoviesConfig',

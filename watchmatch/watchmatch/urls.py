@@ -8,9 +8,10 @@ handler500 = 'core.views.server_error'
 
 
 urlpatterns = [
+    path('', include('core.urls')),
     path('admin/', admin.site.urls),
     path('auth/', include('users.urls')),
-    path('', include('core.urls')),
+    path('api/', include('api.urls')),
     path('movies/', include('movies.urls')),
     path('rooms/', include('rooms.urls')),
     path('play_room/', include('swipes.urls'))
