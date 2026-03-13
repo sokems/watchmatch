@@ -40,11 +40,8 @@ class MovieSerializer(serializers.ModelSerializer):
         )
 
 
-class RoomSerializer(serializers.ModelSerializer):
-    genres = serializers.PrimaryKeyRelatedField(
-        many=True,
-        queryset=Genre.objects.all()
-    )
+class RoomReadSerializer(serializers.ModelSerializer):
+    genres = GenreSerializer(many=True, read_only=True)
     participants = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -66,6 +63,48 @@ class RoomSerializer(serializers.ModelSerializer):
     def get_participants(self, obj):
         participants = Participant.objects.filter(room_id=obj)
         return [p.name.username for p in participants]
+
+
+class RoomListSerializer(serializers.ModelSerializer):
+    genres = GenreSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Room
+        fields = (
+            'id',
+            'name',
+            'count_participants',
+            'genres',
+            'year_start',
+            'year_end',
+            'adult',
+            'vote_average',
+            'is_playing',
+            'select_movie'
+        )
+
+
+class RoomWriteSerializer(serializers.ModelSerializer):
+    genres = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=Genre.objects.all()
+    )
+
+    class Meta:
+        model = Room
+        fields = (
+            'id',
+            'name',
+            'count_participants',
+            'participants',
+            'genres',
+            'year_start',
+            'year_end',
+            'adult',
+            'vote_average',
+            'is_playing',
+            'select_movie'
+        )
 
 
 class ParticipantSerializer(serializers.ModelSerializer):

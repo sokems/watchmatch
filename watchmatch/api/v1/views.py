@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from movies.models import Movie, Genre
 from movies.services import get_movie_tmdb, create_and_return_movie
 from rooms.models import Room, Participant
-from .serializers import MovieSerializer, RoomSerializer
+from .serializers import MovieSerializer, RoomReadSerializer, RoomListSerializer, RoomWriteSerializer
 
 
 logger = logging.getLogger(__name__)
@@ -39,21 +39,25 @@ class MovieDetailViewSet(mixins.RetrieveModelMixin,
 
 class RoomViewSet(mixins.CreateModelMixin,
                   mixins.RetrieveModelMixin,
+                  mixins.ListModelMixin,
                   viewsets.GenericViewSet):
     """
     Создание и просмотр комнаты
     """
 
     queryset = Room.objects.all()
-    serializer_class = RoomSerializer
+    serializer_class = RoomReadSerializer
     #permission_classes = [IsAuthenticated]
 
-    def get_participant(self):
-        return Participant.objects.get(name=self.request.user)
-
     def get_queryset(self):
-        user = self.get_participant()
-        return Room.objects.filter(participants=user)
+        return Room.objects.filter(participants__name=self.request.user)
+
+    def get_serializer_class(self):
+        if self.request.method in ('POST',):
+            return RoomWriteSerializer
+        elif self.action == 'list':
+            return RoomListSerializer
+        return RoomReadSerializer
 
     def perform_create(self, serializer):
         room = serializer.save()
