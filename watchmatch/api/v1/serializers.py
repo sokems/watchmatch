@@ -139,13 +139,6 @@ class ParticipantSerializer(serializers.ModelSerializer):
         )
 
 
-class SwipeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Swipe
-        fields = (
-            'id',
-            'room',
-            'movie',
-            'status',
-            'participant'
-        )
+class SwipeActionSerializer(serializers.Serializer):
+    movie_id = serializers.IntegerField(required=False)
+    action = serializers.ChoiceField(choices=['like', 'dislike'], required=False)
