@@ -3,13 +3,13 @@ import logging
 from rest_framework.response import Response
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
-from django.conf import settings
 from rest_framework.permissions import IsAuthenticated
 
 from movies.models import Movie, Genre
 from movies.services import get_movie_tmdb, create_and_return_movie
 from rooms.models import Room, Participant
 from .serializers import MovieSerializer, RoomReadSerializer, RoomListSerializer, RoomWriteSerializer
+from .permissions import IsParticipant
 
 
 logger = logging.getLogger(__name__)
@@ -23,6 +23,7 @@ class MovieDetailViewSet(mixins.RetrieveModelMixin,
     """
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
+    permission_classes = [IsAuthenticated]
 
     @action(methods=['get'], detail=False)
     def random(self, request):
@@ -46,14 +47,22 @@ class RoomViewSet(mixins.CreateModelMixin,
     """
 
     queryset = Room.objects.all()
-    serializer_class = RoomReadSerializer
-    #permission_classes = [IsAuthenticated]
+
 
     def get_queryset(self):
-        return Room.objects.filter(participants__name=self.request.user)
+        if self.action == 'list':
+            return Room.objects.filter(participants__name=self.request.user)
+        return super().get_queryset()
+
+    def get_permissions(self):
+        if self.action == 'create':
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [IsParticipant]
+        return [permission() for permission in permission_classes]
 
     def get_serializer_class(self):
-        if self.request.method in ('POST',):
+        if self.action == 'create':
             return RoomWriteSerializer
         elif self.action == 'list':
             return RoomListSerializer
@@ -61,4 +70,4 @@ class RoomViewSet(mixins.CreateModelMixin,
 
     def perform_create(self, serializer):
         room = serializer.save()
-        participant = Participant.objects.create(name=self.request.user, room_id=room)
+        Participant.objects.create(name=self.request.user, room_id=room)

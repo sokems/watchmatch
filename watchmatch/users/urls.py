@@ -1,6 +1,6 @@
 from django.urls import path, include
 
-from .views import CreateUserView
+from .views import CreateUserView, GetTokenView
 
 
 app_name = 'users'
@@ -12,4 +12,5 @@ urlpatterns = [
         CreateUserView.as_view(),
         name='registration',
     ),
+    path('get-api-token/', GetTokenView.as_view(), name='get-api-token'),
 ]

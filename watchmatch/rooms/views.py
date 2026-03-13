@@ -34,7 +34,7 @@ def create_room(request):
         )
 
     if form.errors:
-        logger.warning(f"Failed to create room by user {request.user.id}: {form.errors}")
+        logger.warning(f'Failed to create room by user {request.user.id}: {form.errors}')
 
     context = {'form': form}
 

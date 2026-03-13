@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_bootstrap5',
     'rest_framework',
+    'rest_framework.authtoken',
     'debug_toolbar',
     'core.apps.CoreConfig',
     'movies.apps.MoviesConfig',
@@ -192,3 +193,14 @@ else:
     }
 
     LOGGING["loggers"][""]["handlers"] = ["file"]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}

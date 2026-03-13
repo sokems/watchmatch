@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh; padding: 50px 0;">
+  <div class="card p-4 shadow text-start" style="width: 400px;">
+    <h3 class="card-title mb-4 text-center">Получение API Токена</h3>
+
+    <form method="post">
+      {% bootstrap_form form %}
+
+      {% csrf_token %}
+      {% bootstrap_button button_type="submit" content="Получить" %}
+
+      {% if token %}
+        <div class="alert alert-success mt-3">
+          <strong>Ваш API Token:</strong><br>
+          <code id="api-token" style="color: black;">{{ token }}</code>
+          <span id="copy-msg" style="display:none; color: black; margin-top:10px;">Скопировано!</span>
+          <div>
+            <button type="button" class="btn btn-light btn-sm mt-2" onclick="copyToken()">Копировать</button>
+          </div>
+        </div>
+
+        <script>
+        function copyToken() {
+          const token = document.getElementById('api-token').innerText;
+          navigator.clipboard.writeText(token)
+            .then(() => {
+              const msg = document.getElementById('copy-msg');
+              msg.style.display = 'inline';
+              setTimeout(() => msg.style.display = 'none', 2000); // скрыть через 2 сек
+            })
+            .catch(err => {
+              console.error('Не удалось скопировать токен:', err);
+            });
+        }
+        </script>
+      {% endif %}
+    </form>
+  </div>
+</div>
+{% endblock %}

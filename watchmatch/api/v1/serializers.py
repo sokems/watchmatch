@@ -106,6 +106,26 @@ class RoomWriteSerializer(serializers.ModelSerializer):
             'select_movie'
         )
 
+    def validate_count_participants(self, value):
+        if value < 1 or value > 4:
+            raise serializers.ValidationError('Количество участников может быть от 1 до 4')
+        return value
+
+    def validate_vote_average(self, value):
+        if value < 0 or value > 10:
+            raise serializers.ValidationError('Рейтинг может быть от 0 до 10')
+        return value
+
+    def validate_year_start(self, value):
+        if value < 0:
+            raise serializers.ValidationError('Нельзя указать год до нашей эры')
+        return value
+
+    def validate_year_end(self, value):
+        if value < 0:
+            raise serializers.ValidationError('Нельзя указать год до нашей эры')
+        return value
+
 
 class ParticipantSerializer(serializers.ModelSerializer):
     name = UserSerializer(read_only=True)
