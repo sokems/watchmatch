@@ -118,7 +118,9 @@ def get_movies_from_tmdb_by_room(room, count=50) -> list[dict]:
         if response.status_code != 200:
             logger.error(
                 f'The TMDB server did not return a response: '
-                f'room_id={room.pk}, status_code={response.status_code}, url={response.url}'
+                f'room_id={room.pk}, '
+                f'status_code={response.status_code}, '
+                f'url={response.url}'
             )
             break
 

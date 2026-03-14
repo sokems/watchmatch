@@ -48,7 +48,7 @@ class Movie(models.Model):
     id = models.IntegerField(
         primary_key=True,
         verbose_name='TMDB ID',
-        help_text='Идентификатор с TMDB API (заполняется автоматически)'
+        help_text='Идентификатор с TMDB API'
     )
     title = models.CharField(
         max_length=100,

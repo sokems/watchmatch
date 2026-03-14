@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 
 from movies.models import Movie, Genre
 from rooms.models import Room, Participant
-from swipes.models import Swipe
 
 
 User = get_user_model()
@@ -108,7 +107,9 @@ class RoomWriteSerializer(serializers.ModelSerializer):
 
     def validate_count_participants(self, value):
         if value < 1 or value > 4:
-            raise serializers.ValidationError('Количество участников может быть от 1 до 4')
+            raise serializers.ValidationError(
+                'Количество участников может быть от 1 до 4'
+            )
         return value
 
     def validate_vote_average(self, value):
