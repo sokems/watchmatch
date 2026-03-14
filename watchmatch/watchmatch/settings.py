@@ -1,7 +1,6 @@
 from pathlib import Path
 import os
 import sys
-import logging.handlers
 
 from dotenv import load_dotenv
 
@@ -27,7 +26,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_yasg',
     'django_bootstrap5',
+    'rest_framework',
+    'corsheaders',
+    'rest_framework.authtoken',
     'debug_toolbar',
     'core.apps.CoreConfig',
     'movies.apps.MoviesConfig',
@@ -38,6 +41,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -191,3 +195,18 @@ else:
     }
 
     LOGGING["loggers"][""]["handlers"] = ["file"]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_URLS_REGEX = r'^/api/.*$'

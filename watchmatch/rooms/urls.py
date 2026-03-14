@@ -8,5 +8,5 @@ app_name = 'rooms'
 urlpatterns = [
     path('create-room/', create_room, name='create_room'),
     path('join-room/', join_room, name='join_room'),
-    path('list_rooms', list_play_rooms, name='list_rooms'),
+    path('list_rooms/', list_play_rooms, name='list_rooms'),
 ]

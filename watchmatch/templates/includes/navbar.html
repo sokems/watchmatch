@@ -36,6 +36,9 @@
         </li>
         <span class="navbar-text ms-4">Пользователь: <b>{{ user.username }}</b></span>
         <li class="nav-item">
+          <li>
+            <a class="nav-link {% if view_name  == 'users:get-api-token' %}active{% endif %}" href="{% url 'users:get-api-token' %}">API Token</a>
+          </li>
           <form method="post" action="{% url 'users:logout' %}" >
             {% csrf_token %}
             <button type="submit" class="nav-link">Выйти</button>

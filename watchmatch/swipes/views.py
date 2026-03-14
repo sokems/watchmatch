@@ -27,7 +27,6 @@ def play_room(request, room_id, participant_id):
     participants = Participant.objects.filter(room_id=room)
     count_participants = participants.count()
 
-
     if participant.name != request.user:
         logger.warning(
             f"User {request.user.id} tried to access "
