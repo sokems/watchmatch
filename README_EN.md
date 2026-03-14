@@ -1,4 +1,5 @@
 ![WatchMatch Logo](./watchmatch/static_dev/img/logo.png)
+
 For Russian version see [README.md](README.md)
 
 ## Description
@@ -43,6 +44,8 @@ Users join a shared room where the creator sets filters, and then swipe through 
 - Python-dotenv
 - Django Debug Toolbar
 - Requests
+- Django REST Framework (DRF)
+- drf-yasg (Swagger / OpenAPI)
 
 ---
 
@@ -123,3 +126,21 @@ python manage.py runserver
 - PyCharm
 - Pytest / Pytest-Django (testing)
 - Flake8 (static code analysis)
+
+---
+
+## API
+
+The project provides a REST API for interacting with the application.
+
+Main endpoints:
+
+- GET /api/v1/movies/random — get a random movie
+- GET /api/v1/movies/{id}/ — get a movie by ID
+- GET /api/v1/rooms/ — get the list of rooms the user belongs to
+- POST /api/v1/rooms/ — create a room
+- GET /api/v1/rooms/{id}/ — get room information
+- POST /api/v1/rooms/{id}/swipe — perform a movie swipe action
+
+API documentation:
+- /redoc

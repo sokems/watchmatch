@@ -1,4 +1,5 @@
 ![WatchMatch Logo](./watchmatch/static_dev/img/logo.png)
+
 Для английской версии смотрите [README_EN.md](README_EN.md)
 ## Описание
 
@@ -42,6 +43,8 @@
 - Python-dotenv
 - Django Debug Toolbar
 - Requests
+- Django REST Framework (DRF)
+- drf-yasg (Swagger / OpenAPI документация API)
 
 ---
 
@@ -122,3 +125,21 @@ python manage.py runserver
 - PyCharm
 - Pytest / Pytest-Django (тестирование)
 - Flake8 (статический анализ кода)
+
+---
+
+## API
+
+Проект предоставляет REST API для взаимодействия с приложением.
+
+Основные эндпоинты:
+
+- GET /api/v1/movies/random — получение случайного фильма
+- GET /api/v1/movies/{id}/ — получение фильма по ID
+- GET /api/v1/rooms/ — получение списка комнат в которой состоит пользователь
+- POST /api/v1/rooms/ — создание комнаты
+- GET /api/v1/rooms/{id}/ — получение информации по комнате
+- POST /api/v1/rooms/{id}/swipe - действие выбора фильма
+
+Документация по API:
+- /redoc
