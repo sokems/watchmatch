@@ -166,6 +166,16 @@ def url_api_v1_detail_room(room):
 
 
 @pytest.fixture
+def url_api_v1_join_room(room):
+    return reverse(
+        'api:v1:rooms-join',
+        kwargs={
+            'pk': room.pk
+        }
+    )
+
+
+@pytest.fixture
 def url_api_v1_swipe_movies(room):
     return reverse(
         'api:v1:rooms-swipe',
