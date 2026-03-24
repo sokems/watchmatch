@@ -65,3 +65,5 @@ def test_cannot_join_full_room(auth_user_client, room, django_user_model):
     room.refresh_from_db()
 
     assert room.participants.count() == 1
+
+

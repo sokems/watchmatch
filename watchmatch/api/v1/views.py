@@ -96,7 +96,7 @@ class RoomViewSet(mixins.CreateModelMixin,
 
     def get_queryset(self):
         if self.action == 'list':
-            return Room.objects.filter(participants__name=self.request.user)
+            return Room.objects.filter(participants__name=self.request.user).distinct()
         return super().get_queryset()
 
     def get_permissions(self):

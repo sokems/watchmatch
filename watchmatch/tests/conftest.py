@@ -3,6 +3,7 @@ import pytest
 
 from django.test.client import Client
 from django.urls import reverse
+from rest_framework.authtoken.models import Token
 
 from movies.models import Movie, Genre
 from rooms.models import Room, Participant
@@ -43,7 +44,19 @@ def admin_user(django_user_model):
 
 @pytest.fixture
 def admin_client(client, admin_user):
-    client.login(username='admin', password='password')
+    client.force_login(admin_user)
+    return client
+
+
+@pytest.fixture
+def auth_user_token(auth_user):
+    token, created = Token.objects.get_or_create(user=auth_user)
+    return token.key
+
+
+@pytest.fixture
+def auth_user_client_token(client, auth_user_token):
+    client.defaults['HTTP_AUTHORIZATION'] = f'Token {auth_user_token}'
     return client
 
 
@@ -86,7 +99,12 @@ def url_list_movies():
 
 @pytest.fixture
 def url_detail_movie(movie):
-    return reverse('movies:detail_movie', kwargs={'movie_id': movie.pk})
+    return reverse(
+        'movies:detail_movie',
+        kwargs={
+            'movie_id': movie.pk
+        }
+    )
 
 
 @pytest.fixture
@@ -96,6 +114,46 @@ def url_play_room(room, participant):
         kwargs={
             'room_id': room.pk,
             'participant_id': participant.pk
+        }
+    )
+
+
+@pytest.fixture
+def url_api_v1_movies_detail(movie):
+    return reverse(
+        'api:v1:movies-detail',
+        kwargs={
+            'pk': movie.pk
+        }
+    )
+
+
+@pytest.fixture
+def url_api_v1_random_movie():
+    return reverse('api:v1:movies-random')
+
+
+@pytest.fixture
+def url_api_v1_list_or_create_rooms():
+    return reverse('api:v1:rooms-list')
+
+
+@pytest.fixture
+def url_api_v1_detail_room(room):
+    return reverse(
+        'api:v1:rooms-detail',
+        kwargs={
+            'pk': room.pk
+        }
+    )
+
+
+@pytest.fixture
+def url_api_v1_swipe_movies(room):
+    return reverse(
+        'api:v1:rooms-swipe',
+        kwargs={
+            'pk': room.pk
         }
     )
 
@@ -149,7 +207,6 @@ def mock_tmdb_movie(monkeypatch):
 def mock_tmdb_list(monkeypatch):
     """Мокаем get_movie_tmdb для list_movies"""
     def fake_get_movie_tmdb(*args, **kwargs):
-        # возвращаем фиктивный фильм
         return {
             "id": 1,
             "title": "Фильм 1",
@@ -182,6 +239,20 @@ def room(db, genre):
     room = Room.objects.create(
         name='Комната 1',
         count_participants=2,
+        year_start=2020,
+        year_end=2021,
+        adult=True,
+        vote_average=5
+    )
+    room.genres.add(genre)
+    return room
+
+
+@pytest.fixture
+def room_without_participant(db, genre):
+    room = Room.objects.create(
+        name='Комната 2',
+        count_participants=1,
         year_start=2020,
         year_end=2021,
         adult=True,
