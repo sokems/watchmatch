@@ -89,6 +89,7 @@ def test_api_random_movie(auth_user_client_token, url_api_v1_random_movie):
     assert 'original_title' in data
     assert 'genres' in data
 
+
 @pytest.mark.django_db
 def test_api_rooms_list(
         auth_user_client_token,
@@ -119,7 +120,12 @@ def test_api_rooms_list(
 
 
 @pytest.mark.django_db
-def test_api_room_detail(auth_user_client_token, room, participants, url_api_v1_detail_room):
+def test_api_room_detail(
+        auth_user_client_token,
+        room,
+        participants,
+        url_api_v1_detail_room
+):
     """АПИ возвращает информацию о комнате"""
     response = auth_user_client_token.get(url_api_v1_detail_room)
 
@@ -163,9 +169,11 @@ def test_api_swipe_first_movie(
         'genre_ids': [1],
     }
 
-    with patch('api.v1.views.get_movies_from_tmdb_by_room', return_value=[mock_movie_data]):
+    with patch(
+            'api.v1.views.get_movies_from_tmdb_by_room',
+            return_value=[mock_movie_data]
+    ):
         response = auth_user_client_token.post(url_api_v1_swipe_movies, data={})
-
 
     assert response.status_code == 200
 
@@ -212,7 +220,13 @@ def test_api_swipe_like(
 
 
 @pytest.mark.django_db
-def test_api_swipe_match(auth_user_client_token, room, participants, movie, url_api_v1_swipe_movies):
+def test_api_swipe_match(
+        auth_user_client_token,
+        room,
+        participants,
+        movie,
+        url_api_v1_swipe_movies
+):
     """Когда фильм выбран"""
     p1, p2 = participants
 
@@ -232,8 +246,14 @@ def test_api_swipe_match(auth_user_client_token, room, participants, movie, url_
         'backdrop_path': '/backdrop.jpg'
     }
 
-    with patch('api.v1.views.get_movies_from_tmdb_by_room', return_value=[mock_movie_data]), \
-            patch('api.v1.views.create_and_return_movie', return_value=movie):
+    with patch(
+            'api.v1.views.get_movies_from_tmdb_by_room',
+            return_value=[mock_movie_data]
+    ), \
+            patch(
+                'api.v1.views.create_and_return_movie',
+                return_value=movie
+            ):
         response = auth_user_client_token.post(url_api_v1_swipe_movies, data={
             'movie_id': movie.id,
             'action': 'like'
