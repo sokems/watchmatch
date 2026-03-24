@@ -70,7 +70,11 @@ def test_cannot_join_full_room(auth_user_client, room, django_user_model):
 
 
 @pytest.mark.django_db
-def test_api_only_authenticated_can_access_movies(auth_user_client_token, anonymous_client, movie):
+def test_api_only_authenticated_can_access_movies(
+        auth_user_client_token,
+        anonymous_client,
+        movie
+):
     """
     Проверяет, что доступ к деталям фильма разрешен только авторизованным пользователям.
     """
