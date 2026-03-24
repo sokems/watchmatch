@@ -21,6 +21,11 @@ def client():
 
 
 @pytest.fixture
+def anonymous_client(client):
+    return Client()
+
+
+@pytest.fixture
 def auth_user(django_user_model, db):
     return django_user_model.objects.create(username='sokem')
 
@@ -57,6 +62,18 @@ def auth_user_token(auth_user):
 @pytest.fixture
 def auth_user_client_token(client, auth_user_token):
     client.defaults['HTTP_AUTHORIZATION'] = f'Token {auth_user_token}'
+    return client
+
+
+@pytest.fixture
+def auth_admin_token(admin_user):
+    token, created = Token.objects.get_or_create(user=admin_user)
+    return token.key
+
+
+@pytest.fixture
+def auth_admin_client_token(client, auth_admin_token):
+    client.defaults['HTTP_AUTHORIZATION'] = f'Token {auth_admin_token}'
     return client
 
 

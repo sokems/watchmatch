@@ -117,6 +117,34 @@ class RoomViewSet(mixins.CreateModelMixin,
         room = serializer.save()
         Participant.objects.create(name=self.request.user, room_id=room)
 
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def join(self, request, pk=None):
+        """
+        Подключение пользователя к комнате
+        """
+        room = get_object_or_404(Room, pk=pk)
+
+        if room.participants.count() >= room.count_participants:
+            return Response(
+                {"message": "Комната заполнена."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        participant, created = Participant.objects.get_or_create(
+            name=request.user,
+            room_id=room
+        )
+        if not created:
+            return Response(
+                {"message": "Вы уже подключены к этой комнате."},
+                status=status.HTTP_200_OK
+            )
+
+        return Response(
+            {"message": f"Вы успешно подключились к комнате {room.id}."},
+            status=status.HTTP_201_CREATED
+        )
+
     @swagger_auto_schema(
         operation_summary="Свайп в комнате (лайк/дизлайк фильма)",
         operation_description="""
