@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 import pytest
 from django.urls import reverse
 from unittest.mock import patch
@@ -11,7 +13,7 @@ def test_homepage_template(client, url_homepage_index):
     """Главная страница рендерится с шаблоном core/index.html."""
     response = client.get(url_homepage_index)
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     assert 'core/index.html' in [t.name for t in response.templates]
 
 
@@ -62,7 +64,7 @@ def test_api_movie_detail(auth_user_client_token, movie, url_api_v1_movies_detai
     """АПИ выдает верные поля по фильму"""
     response = auth_user_client_token.get(url_api_v1_movies_detail)
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
 
     data = response.json()
 
@@ -81,7 +83,7 @@ def test_api_random_movie(auth_user_client_token, url_api_v1_random_movie):
     """АПИ выдает случайный фильм"""
     response = auth_user_client_token.get(url_api_v1_random_movie)
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
 
     data = response.json()
 
@@ -101,7 +103,7 @@ def test_api_rooms_list(
     """АПИ выдает список комнат, в которой состоит пользователь"""
     response = auth_user_client_token.get(url_api_v1_list_or_create_rooms)
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
 
     data = response.json()
 
@@ -129,7 +131,7 @@ def test_api_room_detail(
     """АПИ возвращает информацию о комнате"""
     response = auth_user_client_token.get(url_api_v1_detail_room)
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
 
     data = response.json()
 
@@ -175,7 +177,7 @@ def test_api_swipe_first_movie(
     ):
         response = auth_user_client_token.post(url_api_v1_swipe_movies, data={})
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
 
     data = response.json()
 
@@ -212,7 +214,7 @@ def test_api_swipe_like(
             }
         )
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
 
     data = response.json()
 
@@ -259,7 +261,7 @@ def test_api_swipe_match(
             'action': 'like'
         })
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
 
     data = response.json()
 

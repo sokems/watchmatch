@@ -1,8 +1,12 @@
+from http import HTTPStatus
+
 import pytest
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 
 from rooms.models import Room, Participant
+from swipes.models import Swipe
+from unittest.mock import patch
 
 
 User = get_user_model()
@@ -18,7 +22,7 @@ def test_anonymous_cannot_create_room(client):
         'count_participants': 2,
     })
 
-    assert response.status_code == 302
+    assert response.status_code == HTTPStatus.FOUND
     assert Room.objects.count() == 0
 
 
@@ -37,7 +41,7 @@ def test_auth_user_can_create_room(auth_user_client, genre):
         'vote_average': 7,
     })
 
-    assert response.status_code == 302
+    assert response.status_code == HTTPStatus.FOUND
     assert Room.objects.count() == 1
 
 
@@ -50,7 +54,7 @@ def test_anonymous_cannot_join_room(client, room):
         'room_id': room.id
     })
 
-    assert response.status_code == 302
+    assert response.status_code == HTTPStatus.FOUND
 
 
 @pytest.mark.django_db
