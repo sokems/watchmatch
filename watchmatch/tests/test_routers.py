@@ -9,21 +9,21 @@ from pytest_django.asserts import assertRedirects
 def test_admin_redirect_anonymous(client, url_admin_index):
     """Анонимный пользователь перенаправляется со страницы админки."""
     response = client.get(url_admin_index)
-    assert response.status_code == 302
+    assert response.status_code == HTTPStatus.FOUND
 
 
 @pytest.mark.django_db
 def test_admin_forbidden_for_regular_user(auth_user_client, url_admin_index):
     """Обычные пользователи не имеют доступа к админке (302 или 403)."""
     response = auth_user_client.get(url_admin_index)
-    assert response.status_code in (302, 403)
+    assert response.status_code in (HTTPStatus.FOUND, HTTPStatus.FORBIDDEN)
 
 
 @pytest.mark.django_db
 def test_admin_available_for_staff(admin_client, url_admin_index):
     """Администраторы могут просматривать страницу админки (200)."""
     response = admin_client.get(url_admin_index)
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
 
 
 @pytest.mark.parametrize(
