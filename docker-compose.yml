@@ -1,0 +1,16 @@
+volumes:
+  static:
+
+services:
+  backend:
+    build: ./watchmatch/
+    env_file: .env
+    volumes:
+      - static:/app/static
+
+  gateway:
+    build: ./gateway/
+    ports:
+      - 8000:80 
+    volumes:
+      - static:/usr/share/nginx/html/static
