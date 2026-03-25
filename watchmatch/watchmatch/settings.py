@@ -15,7 +15,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'fallback_key_for_dev')
 
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.101.9']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 TMDB_API_KEY = os.getenv('TMDB_API_KEY')
 
