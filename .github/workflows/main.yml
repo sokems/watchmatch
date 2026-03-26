@@ -32,6 +32,7 @@ jobs:
     - name: Test with flake8 and pytest
       env:
         CI: "true"
+        TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
         POSTGRES_USER: django_user
         POSTGRES_PASSWORD: django_password
         POSTGRES_DB: django_db
