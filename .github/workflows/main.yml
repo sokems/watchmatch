@@ -16,6 +16,9 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v3
 
+    - name: Create logs folder
+      run: mkdir -p watchmatch/watchmatch/logs
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
@@ -25,9 +28,6 @@ jobs:
       run: |
         pip install --upgrade pip
         pip install -r ./watchmatch/requirements.txt
-
-    - name: Create logs folder
-      run: mkdir -p watchmatch/watchmatch/logs
 
     - name: Test with flake8 and pytest
       env:
