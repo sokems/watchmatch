@@ -15,7 +15,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'fallback_key_for_dev')
 
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.101.9']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 TMDB_API_KEY = os.getenv('TMDB_API_KEY')
 
@@ -119,9 +119,9 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STATIC_DIR = BASE_DIR / 'static_dev'
+STATIC_DIR = BASE_DIR / 'static'
 
-STATICFILES_DIRS = [STATIC_DIR]
+STATICFILES_DIRS = [BASE_DIR / "static_dev"]
 
 STATIC_ROOT = BASE_DIR / 'static'
 
@@ -210,3 +210,13 @@ REST_FRAMEWORK = {
 CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_URLS_REGEX = r'^/api/.*$'
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://watch-match.ru',
+    'https://193.168.49.179',
+]
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
