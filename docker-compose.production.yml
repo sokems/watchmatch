@@ -1,0 +1,18 @@
+volumes:
+  static:
+
+services:
+  backend:
+    image: sokems/watchmatch_backend
+    env_file: .env
+    volumes:
+      - static:/app/static
+    dns:
+      - 1.1.1.1
+
+  gateway:
+    image: sokems/watchmatch_gateway
+    ports:
+      - 8000:80 
+    volumes:
+      - static:/usr/share/nginx/html/static
