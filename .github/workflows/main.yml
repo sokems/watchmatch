@@ -31,6 +31,7 @@ jobs:
 
     - name: Test with flake8 and pytest
       env:
+        CI: "true"
         POSTGRES_USER: django_user
         POSTGRES_PASSWORD: django_password
         POSTGRES_DB: django_db
