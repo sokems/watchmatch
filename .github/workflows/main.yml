@@ -26,6 +26,9 @@ jobs:
         pip install --upgrade pip
         pip install -r ./watchmatch/requirements.txt
 
+    - name: Create logs folder
+      run: mkdir -p watchmatch/watchmatch/logs
+
     - name: Test with flake8 and pytest
       env:
         POSTGRES_USER: django_user
